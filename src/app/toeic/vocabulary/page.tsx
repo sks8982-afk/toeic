@@ -2,7 +2,7 @@
 // Plan SC: SC-08 — 학습 기록 저장 및 복원
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, ProgressBar } from '@/shared/components/ui';
 import { Flashcard, QuizMode, BoxProgress, SessionHeader } from '@/features/vocabulary/components';
@@ -12,6 +12,7 @@ import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useAuth } from '@/shared/providers/AuthProvider';
 import { logVocabStudy, updateDailySummary } from '@/shared/lib/activity-logger';
+import { supabase } from '@/shared/lib/supabase';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
 import type { VocabWord } from '@/types';
@@ -38,6 +39,26 @@ export default function VocabularyPage() {
 
   const session = useVocabSession(leitner.allProgress, ALL_WORDS, dailyTarget);
 
+  // 세션 내 정답/오답 카운터
+  const sessionStats = useRef({ correct: 0, wrong: 0, total: 0 });
+
+  // 페이지 이탈 시 세션 요약 DB 저장
+  useEffect(() => {
+    return () => {
+      const s = sessionStats.current;
+      if (user && s.total > 0) {
+        supabase.from('vocab_study_log').insert({
+          user_id: user.id,
+          word_id: 'SESSION_SUMMARY',
+          word: `세션 요약: ${s.total}개 학습 (${s.correct}정답, ${s.wrong}오답)`,
+          action: 'session_end',
+          box_before: s.correct,
+          box_after: s.wrong,
+        });
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // 플래시카드 자가 평가 처리
   const handleAssess = useCallback(
     (result: 'know' | 'unsure' | 'unknown') => {
@@ -58,6 +79,11 @@ export default function VocabularyPage() {
       }
 
       const boxAfter = result === 'know' ? Math.min(boxBefore + 1, 5) : result === 'unknown' ? 1 : boxBefore;
+
+      // 세션 카운터
+      sessionStats.current.total++;
+      if (result === 'know') sessionStats.current.correct++;
+      else if (result === 'unknown') sessionStats.current.wrong++;
 
       // DB에 기록
       if (user) {
@@ -86,6 +112,10 @@ export default function VocabularyPage() {
       } else {
         leitner.demote(session.currentWord.id);
       }
+
+      sessionStats.current.total++;
+      if (correct) sessionStats.current.correct++;
+      else sessionStats.current.wrong++;
 
       if (user) {
         logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, correct ? 'quiz_correct' : 'quiz_wrong', boxBefore, correct ? Math.min(boxBefore + 1, 5) : 1);
