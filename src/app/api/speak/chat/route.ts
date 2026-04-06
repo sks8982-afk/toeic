@@ -46,20 +46,20 @@ export async function POST(request: Request) {
     const systemPrompt = `You are a friendly English conversation partner for a Korean learner.
 Level: ${levelDesc}${scenarioContext}
 
-RESPONSE FORMAT:
-1. First, write your conversational reply in English (1-3 sentences). Do NOT include any JSON, code blocks, or technical formatting in this part.
-2. Then on a NEW LINE, write ONLY a JSON object (no markdown, no \`\`\`):
+You must ALWAYS respond in exactly this format:
 
-{"grammar_issues":[{"original":"user's wrong phrase","corrected":"correct version","explanation":"한국어 설명"}],"pronunciation_tips":[{"word":"word from user","tip":"한국어 발음 팁"}],"suggestions":["more natural way to say what THE USER said"]}
+[Your English reply here, 1-3 sentences]
+---FEEDBACK---
+{"grammar_issues":[{"original":"what user said wrong","corrected":"correct version","explanation":"한국어로 설명"}],"pronunciation_tips":[{"word":"hard word user said","tip":"한국어 발음 팁"}],"suggestions":["better way user could say it"]}
 
-CRITICAL RULES:
-- The feedback JSON must ONLY analyze the USER's LAST message: "${lastUserMsg}"
-- Do NOT analyze or give feedback on YOUR OWN response
-- grammar_issues: errors in the USER's sentence only
-- pronunciation_tips: words the USER used that Korean speakers find hard to pronounce
-- suggestions: better ways the USER could have expressed their message
-- If the user's message has no issues, use empty arrays: {"grammar_issues":[],"pronunciation_tips":[],"suggestions":[]}
-- NEVER put JSON inside your conversational reply`;
+Rules:
+- Analyze ONLY the user's last message: "${lastUserMsg}"
+- Do NOT give feedback on your own reply
+- Always include the ---FEEDBACK--- separator and JSON, even if empty arrays
+- grammar_issues: find grammar mistakes in user's sentence
+- pronunciation_tips: words Korean speakers struggle with (th, r/l, v/b, f/p)
+- suggestions: more natural expressions for what the user tried to say
+- Example empty: {"grammar_issues":[],"pronunciation_tips":[],"suggestions":[]}`;
 
     const conversationHistory = messages
       .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text}`)
@@ -69,7 +69,7 @@ CRITICAL RULES:
 
     const rawResponse = await generateContent(prompt);
 
-    // AI 응답에서 텍스트와 피드백 JSON 분리
+    // ---FEEDBACK--- 구분자로 텍스트와 JSON 분리
     let text = rawResponse;
     let feedback = {
       grammar_issues: [] as Array<{ original: string; corrected: string; explanation: string }>,
@@ -77,29 +77,28 @@ CRITICAL RULES:
       suggestions: [] as string[],
     };
 
-    // JSON 추출 시도 (여러 패턴)
-    const jsonPatterns = [
-      /\{[^{}]*"grammar_issues"\s*:\s*\[[\s\S]*?\]\s*,[\s\S]*?\}/,
-      /\{[\s\S]*?"grammar_issues"[\s\S]*?\}(?![\s\S]*\{)/,
-    ];
-
-    for (const pattern of jsonPatterns) {
-      const match = rawResponse.match(pattern);
-      if (match) {
-        text = rawResponse.slice(0, match.index).trim();
-        try {
-          feedback = JSON.parse(match[0]);
-          break;
-        } catch {
-          // 다음 패턴 시도
-        }
+    // 방법 1: ---FEEDBACK--- 구분자
+    if (rawResponse.includes('---FEEDBACK---')) {
+      const parts = rawResponse.split('---FEEDBACK---');
+      text = parts[0].trim();
+      try {
+        const jsonStr = parts[1].match(/\{[\s\S]*\}/)?.[0];
+        if (jsonStr) feedback = JSON.parse(jsonStr);
+      } catch {}
+    } else {
+      // 방법 2: JSON 직접 추출 (구분자 없을 때 폴백)
+      const jsonMatch = rawResponse.match(/\{[\s\S]*"grammar_issues"[\s\S]*\}/);
+      if (jsonMatch) {
+        text = rawResponse.slice(0, jsonMatch.index).trim();
+        try { feedback = JSON.parse(jsonMatch[0]); } catch {}
       }
     }
 
-    // 텍스트에서 남은 JSON/코드블록 잔여물 제거
+    // 텍스트에서 남은 잔여물 제거
     text = text
       .replace(/```[\w]*[\s\S]*?```/g, '')
       .replace(/\{[\s\S]*?\}/g, '')
+      .replace(/---FEEDBACK---/g, '')
       .replace(/\n{2,}/g, '\n')
       .trim();
 
