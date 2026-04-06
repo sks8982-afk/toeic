@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Card } from '@/shared/components/ui';
 import { useToeicStats } from '@/features/toeic/hooks/useToeicStats';
 import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
+import { useListeningQuiz } from '@/features/toeic/hooks/useListeningQuiz';
+import { useLeitnerBox } from '@/features/vocabulary/hooks/useLeitnerBox';
 import type { GrammarType } from '@/types';
 
 const TYPE_LABELS: Record<GrammarType, string> = {
@@ -30,6 +32,8 @@ export default function ToeicDashboardPage() {
   const router = useRouter();
   const { totalSolved, estimatedScore, overallRate, accuracyByType } = useToeicStats();
   const { wrongAnswers, dueReviews } = useWrongAnswers();
+  const listening = useListeningQuiz();
+  const vocab = useLeitnerBox();
 
   const types = Object.entries(TYPE_LABELS) as [GrammarType, string][];
 
@@ -94,6 +98,42 @@ export default function ToeicDashboardPage() {
           <div className="text-center p-3 bg-orange-50 rounded-xl">
             <p className="text-2xl font-bold text-orange-600">{dueReviews.length}</p>
             <p className="text-xs text-gray-500">오늘 복습 대상</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* 리스닝 통계 */}
+      <Card padding="lg">
+        <h3 className="font-bold text-gray-900 mb-3">리스닝</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="text-center p-3 bg-purple-50 rounded-xl">
+            <p className="text-2xl font-bold text-purple-600">{listening.totalSolved}</p>
+            <p className="text-xs text-gray-500">풀이 수</p>
+          </div>
+          <div className="text-center p-3 bg-purple-50 rounded-xl">
+            <p className="text-2xl font-bold text-purple-600">
+              {listening.totalSolved > 0 ? Math.round((listening.totalCorrect / listening.totalSolved) * 100) : 0}%
+            </p>
+            <p className="text-xs text-gray-500">정답률</p>
+          </div>
+        </div>
+      </Card>
+
+      {/* 단어 통계 */}
+      <Card padding="lg">
+        <h3 className="font-bold text-gray-900 mb-3">단어 학습</h3>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="text-center p-3 bg-green-50 rounded-xl">
+            <p className="text-2xl font-bold text-green-600">{vocab.totalLearned}</p>
+            <p className="text-xs text-gray-500">학습 단어</p>
+          </div>
+          <div className="text-center p-3 bg-green-50 rounded-xl">
+            <p className="text-2xl font-bold text-green-600">{vocab.graduated}</p>
+            <p className="text-xs text-gray-500">졸업 (Box 5)</p>
+          </div>
+          <div className="text-center p-3 bg-green-50 rounded-xl">
+            <p className="text-2xl font-bold text-green-600">{vocab.boxDistribution[1]}</p>
+            <p className="text-xs text-gray-500">복습 필요</p>
           </div>
         </div>
       </Card>

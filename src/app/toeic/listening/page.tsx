@@ -9,6 +9,7 @@ import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useAuth } from '@/shared/providers/AuthProvider';
+import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import { logListeningQuiz, updateDailySummary } from '@/shared/lib/activity-logger';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
@@ -54,6 +55,7 @@ export default function ListeningPage() {
   }, [quiz.currentQuestion, isSpeaking, speak, stop]);
 
   const { user } = useAuth();
+  const { addWrongAnswer } = useWrongAnswers();
 
   const handleSelectAnswer = useCallback((index: number) => {
     quiz.selectAnswer(index);
@@ -61,6 +63,18 @@ export default function ListeningPage() {
     const isCorrect = quiz.currentQuestion?.correctIndex === index;
     if (isCorrect) {
       addXP(XP_REWARDS.TOEIC_CORRECT);
+    } else if (quiz.currentQuestion) {
+      // 리스닝 오답도 오답노트에 추가 (ToeicQuestion 형식으로 변환)
+      addWrongAnswer({
+        id: quiz.currentQuestion.id,
+        type: 'vocabulary' as const,
+        difficulty: quiz.currentQuestion.difficulty,
+        sentence: `[리스닝] ${quiz.currentQuestion.question}`,
+        options: quiz.currentQuestion.options,
+        correctIndex: quiz.currentQuestion.correctIndex,
+        explanation: quiz.currentQuestion.explanation,
+        grammarPoint: `리스닝 (${DIFF_LABELS[quiz.currentQuestion.difficulty].label})`,
+      });
     }
 
     // DB에 기록
