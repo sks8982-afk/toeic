@@ -10,6 +10,7 @@ import { useSpeechRecognition } from '@/features/speak/hooks/useSpeechRecognitio
 import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
+import { useProgress } from '@/shared/providers/ProgressProvider';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { getScenarioById, getRandomScenarioForLevel, type ScenarioWithIntro } from '@/features/speak/lib/scenarios';
 import type { OverallRating, SpeakLevel, ChatMessage } from '@/types';
@@ -59,6 +60,8 @@ function ChatContent() {
   const { speak, stop, isSpeaking, availableVoices, selectedVoiceId, setSelectedVoiceId, previewVoice } = useTextToSpeech();
   const { addXP } = useXP();
   const { recordStudy } = useStreak();
+  const { progress } = useProgress();
+  const showPronunciation = progress.settings.pronunciationFeedback;
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastRating = useRef<OverallRating | null>(null);
@@ -219,7 +222,7 @@ function ChatContent() {
               isSpeaking={isSpeaking}
             />
             {msg.role === 'ai' && msg.feedback && (
-              <FeedbackCard feedback={msg.feedback} />
+              <FeedbackCard feedback={msg.feedback} showPronunciation={showPronunciation} />
             )}
           </div>
         ))}

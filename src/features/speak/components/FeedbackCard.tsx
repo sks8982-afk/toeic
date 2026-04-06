@@ -8,11 +8,12 @@ interface FeedbackCardProps {
   readonly feedback: ChatFeedback & {
     readonly pronunciationTips?: readonly { word: string; tip: string }[];
   };
+  readonly showPronunciation?: boolean;
 }
 
-export function FeedbackCard({ feedback }: FeedbackCardProps) {
+export function FeedbackCard({ feedback, showPronunciation = true }: FeedbackCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const tips = feedback.pronunciationTips ?? [];
+  const tips = showPronunciation ? (feedback.pronunciationTips ?? []) : [];
   const hasContent = feedback.grammar.length > 0 || feedback.suggestions.length > 0 || tips.length > 0;
 
   if (!hasContent) return null;

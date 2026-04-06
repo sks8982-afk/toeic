@@ -12,11 +12,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  font-size: 17px; /* 기본 16px → 17px (전체 글씨 약 6% 확대) */
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 18px; /* 태블릿/데스크톱은 더 크게 */
+  }
 }
 
 /* 오답 쉐이크 애니메이션 */

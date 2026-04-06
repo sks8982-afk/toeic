@@ -37,6 +37,7 @@ export interface UserProgress {
     readonly vocabDailyTarget: 10 | 30 | 50;
     readonly toeicDailyTarget: number;
     readonly selectedVoiceId: string;
+    readonly pronunciationFeedback: boolean;
   };
 }
 
@@ -68,5 +69,6 @@ export const DEFAULT_USER_PROGRESS: UserProgress = {
     vocabDailyTarget: 30,
     toeicDailyTarget: 20,
     selectedVoiceId: 'emma',
+    pronunciationFeedback: true,
   },
 };

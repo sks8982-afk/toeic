@@ -18,6 +18,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "TOEIC & Speak - 영어학습 플랫폼",
   description: "TOEIC 시험 준비 + AI 영어회화를 하나의 플랫폼에서",
+  manifest: "/manifest.json",
+  themeColor: "#3b82f6",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "영어학습",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({

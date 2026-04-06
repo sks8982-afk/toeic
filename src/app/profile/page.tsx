@@ -7,14 +7,17 @@ import { Card, Button, Modal } from '@/shared/components/ui';
 import { useAuth } from '@/shared/providers/AuthProvider';
 import { supabase } from '@/shared/lib/supabase';
 import { XPBar, StreakBadge } from '@/features/gamification/components';
+import { useProgress } from '@/shared/providers/ProgressProvider';
 import { useToeicStats } from '@/features/toeic/hooks/useToeicStats';
 import { useLeitnerBox } from '@/features/vocabulary/hooks/useLeitnerBox';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { user, signOut } = useAuth();
+  const { progress, updateProgress } = useProgress();
   const { totalSolved, estimatedScore, overallRate } = useToeicStats();
   const { totalLearned, graduated } = useLeitnerBox();
+  const pronunciationOn = progress.settings.pronunciationFeedback;
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -76,6 +79,29 @@ export default function ProfilePage() {
 
       {/* 설정 메뉴 */}
       <div className="space-y-2">
+        {/* 발음 피드백 토글 */}
+        <div className="w-full flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200">
+          <div>
+            <span className="text-sm font-medium text-gray-700">발음 교정 피드백</span>
+            <p className="text-xs text-gray-400 mt-0.5">Speak 대화 중 발음 팁 표시</p>
+          </div>
+          <button
+            onClick={() => updateProgress(prev => ({
+              ...prev,
+              settings: { ...prev.settings, pronunciationFeedback: !prev.settings.pronunciationFeedback },
+            }))}
+            className={`
+              relative w-12 h-7 rounded-full transition-colors
+              ${pronunciationOn ? 'bg-blue-600' : 'bg-gray-300'}
+            `}
+          >
+            <div className={`
+              absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform
+              ${pronunciationOn ? 'translate-x-5' : 'translate-x-0.5'}
+            `} />
+          </button>
+        </div>
+
         <button
           onClick={() => setShowEditModal(true)}
           className="w-full flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
