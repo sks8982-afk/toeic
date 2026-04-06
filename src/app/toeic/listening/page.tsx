@@ -25,10 +25,22 @@ export default function ListeningPage() {
   const { addXP, lastXPGain } = useXP();
   const { recordStudy } = useStreak();
   const [showTranscript, setShowTranscript] = useState(false);
+  const [showDiffPicker, setShowDiffPicker] = useState(false);
+  const [pendingDiff, setPendingDiff] = useState<ListeningDifficulty | null>(null);
 
   const handleSelectDifficulty = useCallback((diff: ListeningDifficulty) => {
     quiz.startQuestion(diff);
   }, [quiz.startQuestion]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleChangeDifficulty = useCallback((diff: ListeningDifficulty) => {
+    if (diff === quiz.difficulty) {
+      setShowDiffPicker(false);
+      return;
+    }
+    setPendingDiff(diff);
+    setShowDiffPicker(false);
+    alert(`다음 문제부터 "${DIFF_LABELS[diff].label}" 난이도로 변경됩니다.`);
+  }, [quiz.difficulty]);
 
   const handlePlayAudio = useCallback(() => {
     if (!quiz.currentQuestion) return;
@@ -51,8 +63,13 @@ export default function ListeningPage() {
   const handleNext = useCallback(() => {
     setShowTranscript(false);
     stop();
-    quiz.nextQuestion();
-  }, [quiz.nextQuestion, stop]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (pendingDiff) {
+      quiz.startQuestion(pendingDiff);
+      setPendingDiff(null);
+    } else {
+      quiz.nextQuestion();
+    }
+  }, [quiz.nextQuestion, quiz.startQuestion, stop, pendingDiff]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 난이도 선택 화면 (문제가 없을 때)
   if (!quiz.currentQuestion && !quiz.isLoading) {
@@ -172,9 +189,38 @@ export default function ListeningPage() {
           <h1 className="font-bold text-gray-900">리스닝</h1>
           <p className="text-xs text-gray-400">{quiz.totalCorrect}/{quiz.totalSolved} 정답</p>
         </div>
-        <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${DIFF_LABELS[quiz.difficulty].color}`}>
-          {DIFF_LABELS[quiz.difficulty].label}
-        </span>
+        <div className="relative">
+          <button
+            onClick={() => setShowDiffPicker(!showDiffPicker)}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 ${DIFF_LABELS[quiz.difficulty].color}`}
+          >
+            {DIFF_LABELS[quiz.difficulty].label}
+            {pendingDiff && ` → ${DIFF_LABELS[pendingDiff].label}`}
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showDiffPicker && (
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
+              {(['easy', 'medium', 'hard'] as const).map(diff => (
+                <button
+                  key={diff}
+                  onClick={() => handleChangeDifficulty(diff)}
+                  className={`w-full px-4 py-2.5 text-left text-sm flex items-center gap-2 hover:bg-gray-50 ${
+                    diff === quiz.difficulty ? 'font-bold text-blue-600' : 'text-gray-700'
+                  }`}
+                >
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${DIFF_LABELS[diff].color}`}>
+                    {DIFF_LABELS[diff].label}
+                  </span>
+                  {diff === 'easy' ? '기초' : diff === 'medium' ? '대화' : '고급'}
+                  {diff === quiz.difficulty && ' ✓'}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 오디오 플레이어 */}
