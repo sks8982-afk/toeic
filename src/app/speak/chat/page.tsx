@@ -55,7 +55,7 @@ function ChatContent() {
       .finally(() => setScenarioLoading(false));
   }, [isAuto, level, presetScenario]);
 
-  const { messages, isLoading, error, sendMessage } = useChat(level, scenario?.id, scenario?.titleKo);
+  const { messages, isLoading, error, sendMessage, resetChat } = useChat(level, scenario?.id, scenario?.titleKo);
   const { transcript, isListening, isSupported, error: sttError, autoEnded, stopListening, toggleListening, clearAutoEnded } = useSpeechRecognition();
   const { speak, stop, isSpeaking, availableVoices, selectedVoiceId, setSelectedVoiceId, previewVoice } = useTextToSpeech();
   const { addXP } = useXP();
@@ -149,8 +149,16 @@ function ChatContent() {
           <h1 className="font-bold text-gray-900 text-sm">
             {scenario?.titleKo ?? '자유 대화'}
           </h1>
-          <p className="text-xs text-gray-400">Lv.{level}</p>
+          <p className="text-xs text-gray-400">Lv.{level} · {messages.length}턴</p>
         </div>
+        {messages.length > 0 && (
+          <button
+            onClick={() => { resetChat(); router.push(`/speak/chat?level=${level}&auto=true`); }}
+            className="px-2.5 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg active:bg-red-100 font-medium"
+          >
+            새 대화
+          </button>
+        )}
         <VoicePicker
           voices={availableVoices}
           selectedId={selectedVoiceId}

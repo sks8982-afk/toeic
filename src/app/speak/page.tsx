@@ -1,12 +1,13 @@
 // Speak 메인 — 레벨 선택 + 시나리오 목록
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, Button } from '@/shared/components/ui';
 import { ScenarioCard } from '@/features/speak/components';
 import { SCENARIOS, getScenariosForLevel } from '@/features/speak/lib/scenarios';
+import { getSavedChat } from '@/features/speak/hooks/useChat';
 import { StreakBadge, XPBar } from '@/features/gamification/components';
 import type { SpeakLevel } from '@/types';
 
@@ -21,6 +22,11 @@ const LEVEL_INFO = [
 export default function SpeakPage() {
   const router = useRouter();
   const [selectedLevel, setSelectedLevel] = useState<SpeakLevel>(1);
+  const [savedChat, setSavedChat] = useState<ReturnType<typeof getSavedChat>>(null);
+
+  useEffect(() => {
+    setSavedChat(getSavedChat());
+  }, []);
 
   const filteredScenarios = getScenariosForLevel(selectedLevel);
 
@@ -43,6 +49,25 @@ export default function SpeakPage() {
       </div>
 
       <XPBar />
+
+      {/* 이전 대화 이어하기 */}
+      {savedChat && (
+        <Link href={`/speak/chat?level=${savedChat.level}${savedChat.scenarioId ? `&scenario=${savedChat.scenarioId}` : ''}`}>
+          <Card variant="highlight" padding="md">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold text-blue-900">이전 대화 이어하기</p>
+                <p className="text-sm text-blue-700">
+                  {savedChat.scenarioTitle ?? '자유 대화'} · {savedChat.messages.length}턴
+                </p>
+              </div>
+              <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Card>
+        </Link>
+      )}
 
       {/* 레벨 선택 */}
       <div>

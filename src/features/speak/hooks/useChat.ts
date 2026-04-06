@@ -1,13 +1,33 @@
-// Design Ref: §2.3.1 F-SPEAK-05 — Gemini 대화 흐름 관리
+// 대화 흐름 관리 — localStorage 저장으로 대화 이어하기 지원
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { ChatMessage, GrammarIssue } from '@/types';
+
+const CHAT_STORAGE_KEY = 'speak-current-chat';
+
+interface SavedChat {
+  readonly level: number;
+  readonly scenarioId?: string;
+  readonly scenarioTitle?: string;
+  readonly messages: ChatMessage[];
+  readonly savedAt: number;
+}
 
 interface ChatState {
   readonly messages: ChatMessage[];
   readonly isLoading: boolean;
   readonly error: string | null;
+}
+
+// AI 응답에서 JSON 블록 제거 (텍스트만 추출)
+function cleanAIResponse(text: string): string {
+  return text
+    .replace(/```json[\s\S]*?```/g, '')       // ```json ... ``` 블록 제거
+    .replace(/\{[\s\S]*"grammar_issues"[\s\S]*\}/g, '')  // JSON 객체 제거
+    .replace(/\{[\s\S]*"pronunciation_tips"[\s\S]*\}/g, '')
+    .replace(/```[\s\S]*?```/g, '')            // 기타 코드 블록 제거
+    .trim();
 }
 
 export function useChat(level: number, scenarioId?: string, scenarioTitle?: string) {
@@ -16,6 +36,40 @@ export function useChat(level: number, scenarioId?: string, scenarioTitle?: stri
     isLoading: false,
     error: null,
   });
+
+  // 저장된 대화 복원
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+      if (!saved) return;
+
+      const parsed: SavedChat = JSON.parse(saved);
+
+      // 같은 시나리오의 대화만 복원 (24시간 이내)
+      const isExpired = Date.now() - parsed.savedAt > 24 * 60 * 60 * 1000;
+      const isSameScenario = parsed.scenarioId === scenarioId && parsed.level === level;
+
+      if (!isExpired && isSameScenario && parsed.messages.length > 0) {
+        setState(prev => ({ ...prev, messages: parsed.messages }));
+      }
+    } catch {
+      // 복원 실패 무시
+    }
+  }, [level, scenarioId]);
+
+  // 메시지 변경 시 자동 저장
+  useEffect(() => {
+    if (state.messages.length === 0) return;
+
+    const data: SavedChat = {
+      level,
+      scenarioId,
+      scenarioTitle,
+      messages: state.messages,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(data));
+  }, [state.messages, level, scenarioId, scenarioTitle]);
 
   const sendMessage = useCallback(async (userText: string) => {
     const userMessage: ChatMessage = {
@@ -52,15 +106,19 @@ export function useChat(level: number, scenarioId?: string, scenarioTitle?: stri
 
       const data = await res.json();
 
+      // AI 응답 텍스트에서 JSON 잔여물 제거
+      const cleanText = cleanAIResponse(data.text);
+
       const aiMessage: ChatMessage = {
         id: `ai-${Date.now()}`,
         role: 'ai',
-        text: data.text,
+        text: cleanText,
         timestamp: Date.now(),
         feedback: {
           pronunciation: 0,
           grammar: (data.feedback?.grammar ?? []) as GrammarIssue[],
           suggestions: data.feedback?.suggestions ?? [],
+          ...(data.feedback?.pronunciationTips && { pronunciationTips: data.feedback.pronunciationTips }),
         },
       };
 
@@ -80,6 +138,7 @@ export function useChat(level: number, scenarioId?: string, scenarioTitle?: stri
 
   const resetChat = useCallback(() => {
     setState({ messages: [], isLoading: false, error: null });
+    localStorage.removeItem(CHAT_STORAGE_KEY);
   }, []);
 
   return {
@@ -89,4 +148,18 @@ export function useChat(level: number, scenarioId?: string, scenarioTitle?: stri
     sendMessage,
     resetChat,
   } as const;
+}
+
+// 저장된 대화가 있는지 확인 (Speak 메인에서 "이어하기" 표시용)
+export function getSavedChat(): SavedChat | null {
+  try {
+    const saved = localStorage.getItem(CHAT_STORAGE_KEY);
+    if (!saved) return null;
+    const parsed: SavedChat = JSON.parse(saved);
+    const isExpired = Date.now() - parsed.savedAt > 24 * 60 * 60 * 1000;
+    if (isExpired || parsed.messages.length === 0) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
