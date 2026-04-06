@@ -90,6 +90,15 @@ export default function LoginPage() {
             회원가입
           </Link>
         </p>
+
+        {/* 앱 다운로드 */}
+        <a
+          href="https://github.com/sks8982-afk/toeic/releases/latest/download/toeic-speak.apk"
+          className="flex items-center justify-center gap-2 p-3 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
+        >
+          <span className="text-lg">📱</span>
+          <span className="text-sm font-medium text-green-700">Android 앱 다운로드</span>
+        </a>
       </div>
     </div>
   );

@@ -37,10 +37,17 @@
       "Skill(bkit:pdca:*)",
       "Bash(npm run:*)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Read(//c/Users/jungm/Desktop/myprojects/**)",
+      "Bash(npx @react-native-community/cli init ToeicApp)",
+      "Bash(./gradlew assembleRelease)",
+      "Bash(echo \"sdk.dir=C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\jungm\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Android\\\\\\\\\\\\\\\\Sdk\")",
+      "Bash(./gradlew assembleRelease --stacktrace)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\jungm\\Desktop\\myprojects\\toeic\\.claude\\agents"
+      "C:\\Users\\jungm\\Desktop\\myprojects\\toeic\\.claude\\agents",
+      "c:\\Users\\jungm\\Desktop\\myprojects\\ToeicApp",
+      "c:\\Users\\jungm\\Desktop"
     ]
   }
 }
