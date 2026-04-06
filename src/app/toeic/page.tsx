@@ -16,7 +16,7 @@ export default function ToeicPage() {
   const router = useRouter();
   const [selectedType, setSelectedType] = useState<GrammarType | null>(null);
   const { totalSolved, estimatedScore, overallRate, accuracyByType } = useToeicStats();
-  const { dueReviews } = useWrongAnswers();
+  const { dueReviews, wrongAnswers } = useWrongAnswers();
 
   return (
     <div className="space-y-6">
@@ -107,6 +107,12 @@ export default function ToeicPage() {
         <Link href="/toeic/vocabulary">
           <Button fullWidth size="lg" variant="secondary">
             📚 단어 학습
+          </Button>
+        </Link>
+
+        <Link href="/toeic/wrong-notes">
+          <Button fullWidth size="lg" variant="secondary">
+            📋 오답 노트 ({wrongAnswers.length}개)
           </Button>
         </Link>
       </div>
