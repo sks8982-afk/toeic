@@ -55,7 +55,7 @@ function ChatContent() {
   }, [isAuto, level, presetScenario]);
 
   const { messages, isLoading, error, sendMessage } = useChat(level, scenario?.id, scenario?.titleKo);
-  const { transcript, isListening, isSupported, error: sttError, startListening, stopListening } = useSpeechRecognition();
+  const { transcript, isListening, isSupported, error: sttError, stopListening, toggleListening } = useSpeechRecognition();
   const { speak, stop, isSpeaking, availableVoices, selectedVoiceId, setSelectedVoiceId, previewVoice } = useTextToSpeech();
   const { addXP } = useXP();
   const { recordStudy } = useStreak();
@@ -86,12 +86,13 @@ function ChatContent() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages]);
 
-  // 녹음 끝나면 메시지 전송
-  useEffect(() => {
-    if (!isListening && transcript.trim()) {
+  // 마이크 전송 핸들러 (버튼으로 수동 전송)
+  const handleMicSend = useCallback(() => {
+    if (transcript.trim()) {
+      stopListening();
       handleSendMessage(transcript.trim());
     }
-  }, [isListening]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [transcript, stopListening]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSendMessage = useCallback(async (text: string) => {
     const aiMsg = await sendMessage(text);
@@ -257,8 +258,8 @@ function ChatContent() {
           <div className="mt-3">
             <MicButton
               isListening={isListening}
-              onPress={startListening}
-              onRelease={stopListening}
+              onToggle={toggleListening}
+              onSend={handleMicSend}
               disabled={isLoading}
               transcript={isListening ? transcript : undefined}
             />

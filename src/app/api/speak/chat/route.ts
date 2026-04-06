@@ -48,8 +48,13 @@ Rules:
 - Match the complexity to the user's level
 - If the user makes a grammar mistake, respond naturally first
 - After your response, add a JSON block with feedback:
-{"grammar_issues": [{"original": "wrong phrase", "corrected": "correct phrase", "explanation": "설명 in Korean"}], "suggestions": ["Better expression 1", "Better expression 2"]}
-- If no issues, return empty arrays: {"grammar_issues": [], "suggestions": []}
+{
+  "grammar_issues": [{"original": "wrong phrase", "corrected": "correct phrase", "explanation": "한국어로 설명"}],
+  "pronunciation_tips": [{"word": "difficult word", "tip": "한국어로 발음 팁. 예: '이 단어는 th 발음이 중요해요. 혀를 이 사이에 넣고 발음하세요.'"}],
+  "suggestions": ["More natural expression 1", "More natural expression 2"]
+}
+- pronunciation_tips: If the user's sentence contains words that Korean speakers commonly mispronounce (th, r/l, v/b, f/p, z sounds), provide Korean pronunciation tips
+- If no issues, return empty arrays
 - IMPORTANT: Always end with the JSON block on a new line after your conversational response`;
 
     const conversationHistory = messages
@@ -63,7 +68,11 @@ Rules:
     // AI 응답에서 텍스트와 피드백 JSON 분리
     const jsonMatch = rawResponse.match(/\{[\s\S]*"grammar_issues"[\s\S]*\}/);
     let text = rawResponse;
-    let feedback = { grammar_issues: [] as Array<{ original: string; corrected: string; explanation: string }>, suggestions: [] as string[] };
+    let feedback = {
+      grammar_issues: [] as Array<{ original: string; corrected: string; explanation: string }>,
+      pronunciation_tips: [] as Array<{ word: string; tip: string }>,
+      suggestions: [] as string[],
+    };
 
     if (jsonMatch) {
       text = rawResponse.slice(0, jsonMatch.index).trim();
@@ -78,6 +87,7 @@ Rules:
       text,
       feedback: {
         grammar: feedback.grammar_issues ?? [],
+        pronunciationTips: feedback.pronunciation_tips ?? [],
         suggestions: feedback.suggestions ?? [],
       },
     });
