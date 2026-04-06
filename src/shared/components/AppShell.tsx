@@ -4,6 +4,7 @@
 import { usePathname } from 'next/navigation';
 import { BottomNav } from '@/shared/components/ui';
 import { AuthGuard } from './AuthGuard';
+import { UpdateChecker } from './UpdateChecker';
 import type { ReactNode } from 'react';
 
 const PUBLIC_PATHS = ['/auth/login', '/auth/signup'];
@@ -20,6 +21,7 @@ export function AppShell({ children }: { readonly children: ReactNode }) {
     <AuthGuard>
       <main className="flex-1 pb-16 lg:pb-0">{children}</main>
       <BottomNav />
+      <UpdateChecker />
     </AuthGuard>
   );
 }
