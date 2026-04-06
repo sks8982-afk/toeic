@@ -1,0 +1,502 @@
+[
+  {
+    "id": "day-001",
+    "word": "appointment",
+    "meaning": "약속, 예약",
+    "pronunciation": "/əˈpɔɪntmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "I need to reschedule my dentist appointment for next Thursday.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-002",
+    "word": "commute",
+    "meaning": "통근하다",
+    "pronunciation": "/kəˈmjuːt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "She commutes to the office by subway every morning.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-003",
+    "word": "postpone",
+    "meaning": "연기하다",
+    "pronunciation": "/poʊstˈpoʊn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The outdoor event has been postponed due to inclement weather.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-004",
+    "word": "recommend",
+    "meaning": "추천하다",
+    "pronunciation": "/ˌrɛkəˈmɛnd/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "I would recommend arriving early to avoid the long lines.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-005",
+    "word": "purchase",
+    "meaning": "구매하다",
+    "pronunciation": "/ˈpɜːrtʃəs/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Tickets can be purchased online or at the box office.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-006",
+    "word": "convenient",
+    "meaning": "편리한",
+    "pronunciation": "/kənˈviːniənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The store's downtown location is convenient for most customers.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-007",
+    "word": "available",
+    "meaning": "이용 가능한",
+    "pronunciation": "/əˈveɪləbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Free parking is available for all visitors during business hours.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-008",
+    "word": "deliver",
+    "meaning": "배달하다",
+    "pronunciation": "/dɪˈlɪvər/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The package will be delivered to your home address within three business days.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-009",
+    "word": "repair",
+    "meaning": "수리하다",
+    "pronunciation": "/rɪˈpɛr/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The technician will repair the air conditioning unit this afternoon.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-010",
+    "word": "exchange",
+    "meaning": "교환하다",
+    "pronunciation": "/ɪksˈtʃeɪndʒ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Customers may exchange defective items within 14 days of purchase.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-011",
+    "word": "refund",
+    "meaning": "환불",
+    "pronunciation": "/ˈriːfʌnd/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "You are entitled to a full refund if the product does not meet your expectations.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-012",
+    "word": "register",
+    "meaning": "등록하다",
+    "pronunciation": "/ˈrɛdʒɪstər/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Participants must register for the workshop at least one week in advance.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-013",
+    "word": "maintain",
+    "meaning": "유지하다",
+    "pronunciation": "/meɪnˈteɪn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "It is important to maintain a healthy work-life balance.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-014",
+    "word": "arrange",
+    "meaning": "준비하다",
+    "pronunciation": "/əˈreɪndʒ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "I will arrange a meeting with the landlord to discuss the lease renewal.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-015",
+    "word": "subscribe",
+    "meaning": "구독하다",
+    "pronunciation": "/səbˈskraɪb/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "You can subscribe to the newsletter to receive weekly updates.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-016",
+    "word": "obtain",
+    "meaning": "얻다",
+    "pronunciation": "/əbˈteɪn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Visitors must obtain a parking permit from the front desk.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-017",
+    "word": "inconvenience",
+    "meaning": "불편",
+    "pronunciation": "/ˌɪnkənˈviːniəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "We apologize for any inconvenience caused by the construction work.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-018",
+    "word": "warranty",
+    "meaning": "보증서",
+    "pronunciation": "/ˈwɒrənti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The product comes with a one-year manufacturer's warranty.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-019",
+    "word": "adjacent",
+    "meaning": "인접한",
+    "pronunciation": "/əˈdʒeɪsənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The parking lot is adjacent to the main entrance of the building.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-020",
+    "word": "prefer",
+    "meaning": "선호하다",
+    "pronunciation": "/prɪˈfɜːr/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Most customers prefer to pay by credit card rather than cash.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-021",
+    "word": "approximately",
+    "meaning": "대략",
+    "pronunciation": "/əˈprɒksɪmətli/",
+    "partOfSpeech": "adverb",
+    "exampleSentence": "The renovation will take approximately six weeks to complete.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-022",
+    "word": "sufficient",
+    "meaning": "충분한",
+    "pronunciation": "/səˈfɪʃənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Please make sure there is sufficient seating for all guests at the event.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-023",
+    "word": "accommodate",
+    "meaning": "수용하다",
+    "pronunciation": "/əˈkɒmədeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The conference room can accommodate up to 100 people.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-024",
+    "word": "pedestrian",
+    "meaning": "보행자",
+    "pronunciation": "/pəˈdɛstriən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The new traffic signals were installed to improve pedestrian safety.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-025",
+    "word": "expire",
+    "meaning": "만료되다",
+    "pronunciation": "/ɪkˈspaɪər/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Your membership will expire at the end of this month unless renewed.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-026",
+    "word": "prescription",
+    "meaning": "처방전",
+    "pronunciation": "/prɪˈskrɪpʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "You will need a valid prescription to purchase this medication.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-027",
+    "word": "notify",
+    "meaning": "알리다",
+    "pronunciation": "/ˈnoʊtɪfaɪ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Residents will be notified in advance of any scheduled power outages.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-028",
+    "word": "substantial",
+    "meaning": "상당한",
+    "pronunciation": "/səbˈstænʃəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The restaurant underwent a substantial renovation before reopening.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-029",
+    "word": "alternative",
+    "meaning": "대안",
+    "pronunciation": "/ɔːlˈtɜːrnətɪv/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "If the highway is congested, there are several alternative routes available.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-030",
+    "word": "eligible",
+    "meaning": "자격이 있는",
+    "pronunciation": "/ˈɛlɪdʒəbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Residents over 65 are eligible for a discounted public transit pass.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-031",
+    "word": "mandatory",
+    "meaning": "의무적인",
+    "pronunciation": "/ˈmændətɔːri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Wearing a seatbelt is mandatory for all passengers in the vehicle.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-032",
+    "word": "promptly",
+    "meaning": "즉시",
+    "pronunciation": "/ˈprɒmptli/",
+    "partOfSpeech": "adverb",
+    "exampleSentence": "The lecture will begin promptly at 2 p.m., so please arrive on time.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-033",
+    "word": "renovate",
+    "meaning": "개조하다",
+    "pronunciation": "/ˈrɛnəveɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The city plans to renovate the historic library building next spring.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-034",
+    "word": "itinerary",
+    "meaning": "여행 일정",
+    "pronunciation": "/aɪˈtɪnərɛri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please review the itinerary carefully before the start of the group tour.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-035",
+    "word": "complimentary",
+    "meaning": "무료의",
+    "pronunciation": "/ˌkɒmplɪˈmɛntəri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Hotel guests receive complimentary breakfast in the lobby each morning.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-036",
+    "word": "spacious",
+    "meaning": "넓은",
+    "pronunciation": "/ˈspeɪʃəs/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The apartment features a spacious living room with large windows.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-037",
+    "word": "detour",
+    "meaning": "우회로",
+    "pronunciation": "/ˈdiːtʊr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Drivers should follow the detour signs while the main road is under construction.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-038",
+    "word": "prohibit",
+    "meaning": "금지하다",
+    "pronunciation": "/prəˈhɪbɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Smoking is strictly prohibited in all indoor areas of the building.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-039",
+    "word": "reimburse",
+    "meaning": "변상하다",
+    "pronunciation": "/ˌriːɪmˈbɜːrs/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company will reimburse you for any out-of-pocket expenses.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-040",
+    "word": "congestion",
+    "meaning": "혼잡",
+    "pronunciation": "/kənˈdʒɛstʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Traffic congestion is expected during the evening rush hour.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-041",
+    "word": "malfunction",
+    "meaning": "오작동",
+    "pronunciation": "/mælˈfʌŋkʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The elevator was temporarily out of service due to a malfunction.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-042",
+    "word": "affordable",
+    "meaning": "저렴한",
+    "pronunciation": "/əˈfɔːrdəbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The restaurant offers delicious meals at affordable prices.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-043",
+    "word": "complain",
+    "meaning": "불평하다",
+    "pronunciation": "/kəmˈpleɪn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Several customers complained about the long waiting times at the service center.",
+    "category": "daily",
+    "difficulty": "basic"
+  },
+  {
+    "id": "day-044",
+    "word": "attire",
+    "meaning": "복장",
+    "pronunciation": "/əˈtaɪər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Business casual attire is required for the company dinner event.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-045",
+    "word": "commendable",
+    "meaning": "칭찬할 만한",
+    "pronunciation": "/kəˈmɛndəbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The volunteer team's dedication to the community project was commendable.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-046",
+    "word": "patron",
+    "meaning": "단골 고객",
+    "pronunciation": "/ˈpeɪtrən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Patrons of the library may borrow up to five books at a time.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-047",
+    "word": "verify",
+    "meaning": "확인하다",
+    "pronunciation": "/ˈvɛrɪfaɪ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Please verify your email address by clicking the link in the confirmation message.",
+    "category": "daily",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "day-048",
+    "word": "voucher",
+    "meaning": "상품권",
+    "pronunciation": "/ˈvaʊtʃər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Each guest will receive a voucher for a complimentary meal at the restaurant.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-049",
+    "word": "vicinity",
+    "meaning": "근처",
+    "pronunciation": "/vɪˈsɪnɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "There are several parking garages in the vicinity of the convention center.",
+    "category": "daily",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "day-050",
+    "word": "adhere",
+    "meaning": "준수하다",
+    "pronunciation": "/ədˈhɪr/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "All residents must adhere to the building's noise regulations after 10 p.m.",
+    "category": "daily",
+    "difficulty": "advanced"
+  }
+]

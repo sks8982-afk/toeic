@@ -1,0 +1,502 @@
+[
+  {
+    "id": "biz-001",
+    "word": "meeting",
+    "meaning": "회의",
+    "pronunciation": "/ˈmiːtɪŋ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The quarterly meeting has been scheduled for next Monday at 10 a.m.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-002",
+    "word": "contract",
+    "meaning": "계약",
+    "pronunciation": "/ˈkɒntrækt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Both parties must sign the contract before the project can begin.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-003",
+    "word": "revenue",
+    "meaning": "수익",
+    "pronunciation": "/ˈrevənjuː/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company's annual revenue exceeded expectations by 15 percent.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-004",
+    "word": "negotiate",
+    "meaning": "협상하다",
+    "pronunciation": "/nɪˈɡoʊʃieɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The sales team will negotiate the terms of the agreement with the client.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-005",
+    "word": "deadline",
+    "meaning": "마감 기한",
+    "pronunciation": "/ˈdɛdlaɪn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All proposals must be submitted before the deadline on Friday.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-006",
+    "word": "proposal",
+    "meaning": "제안서",
+    "pronunciation": "/prəˈpoʊzəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The marketing team prepared a detailed proposal for the new campaign.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-007",
+    "word": "agenda",
+    "meaning": "안건, 의제",
+    "pronunciation": "/əˈdʒɛndə/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please review the agenda before attending the board meeting.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-008",
+    "word": "approve",
+    "meaning": "승인하다",
+    "pronunciation": "/əˈpruːv/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The manager needs to approve the budget before we proceed.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-009",
+    "word": "colleague",
+    "meaning": "동료",
+    "pronunciation": "/ˈkɒliːɡ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "She consulted with her colleagues before making the final decision.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-010",
+    "word": "department",
+    "meaning": "부서",
+    "pronunciation": "/dɪˈpɑːrtmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The accounting department will handle all reimbursement requests.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-011",
+    "word": "implement",
+    "meaning": "시행하다",
+    "pronunciation": "/ˈɪmplɪmɛnt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company plans to implement the new policy starting next quarter.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-012",
+    "word": "strategy",
+    "meaning": "전략",
+    "pronunciation": "/ˈstrætədʒi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The executive team developed a long-term strategy for market expansion.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-013",
+    "word": "schedule",
+    "meaning": "일정",
+    "pronunciation": "/ˈskɛdʒuːl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The project schedule has been updated to reflect the revised timeline.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-014",
+    "word": "confirm",
+    "meaning": "확인하다",
+    "pronunciation": "/kənˈfɜːrm/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Please confirm your attendance at the conference by Wednesday.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-015",
+    "word": "supervise",
+    "meaning": "감독하다",
+    "pronunciation": "/ˈsuːpərvaɪz/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Mr. Park will supervise the construction of the new office building.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-016",
+    "word": "objective",
+    "meaning": "목표",
+    "pronunciation": "/əbˈdʒɛktɪv/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The primary objective of the workshop is to improve team collaboration.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-017",
+    "word": "submit",
+    "meaning": "제출하다",
+    "pronunciation": "/səbˈmɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Employees must submit their expense reports by the end of each month.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-018",
+    "word": "comply",
+    "meaning": "준수하다",
+    "pronunciation": "/kəmˈplaɪ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "All branches must comply with the updated safety regulations.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-019",
+    "word": "quarter",
+    "meaning": "분기",
+    "pronunciation": "/ˈkwɔːrtər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Sales figures for the third quarter will be released next week.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-020",
+    "word": "inventory",
+    "meaning": "재고",
+    "pronunciation": "/ˈɪnvəntɔːri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The warehouse manager conducted a thorough inventory check last Friday.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-021",
+    "word": "estimate",
+    "meaning": "견적, 추정",
+    "pronunciation": "/ˈɛstɪmət/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The contractor provided an estimate for the renovation project.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-022",
+    "word": "proficiency",
+    "meaning": "숙련도",
+    "pronunciation": "/prəˈfɪʃənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Proficiency in at least two languages is required for this position.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-023",
+    "word": "delegate",
+    "meaning": "위임하다",
+    "pronunciation": "/ˈdɛlɪɡeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Effective managers know how to delegate tasks to their team members.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-024",
+    "word": "preliminary",
+    "meaning": "예비의",
+    "pronunciation": "/prɪˈlɪmɪnɛri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The preliminary results indicate a significant increase in customer satisfaction.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-025",
+    "word": "expansion",
+    "meaning": "확장",
+    "pronunciation": "/ɪkˈspænʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The board approved the company's expansion into the Asian market.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-026",
+    "word": "collaborate",
+    "meaning": "협력하다",
+    "pronunciation": "/kəˈlæbəreɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The two departments will collaborate on the product launch.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-027",
+    "word": "headquarters",
+    "meaning": "본사",
+    "pronunciation": "/ˈhɛdkwɔːrtərz/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company relocated its headquarters to downtown Seoul.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-028",
+    "word": "enterprise",
+    "meaning": "기업",
+    "pronunciation": "/ˈɛntərpraɪz/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Small and medium enterprises play a vital role in the national economy.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-029",
+    "word": "merge",
+    "meaning": "합병하다",
+    "pronunciation": "/mɜːrdʒ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The two firms decided to merge in order to strengthen their market position.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-030",
+    "word": "stakeholder",
+    "meaning": "이해관계자",
+    "pronunciation": "/ˈsteɪkhoʊldər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All stakeholders will be invited to the annual general meeting.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-031",
+    "word": "document",
+    "meaning": "서류",
+    "pronunciation": "/ˈdɒkjʊmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please attach all required documents to the application form.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-032",
+    "word": "efficient",
+    "meaning": "효율적인",
+    "pronunciation": "/ɪˈfɪʃənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The new software made the invoicing process much more efficient.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-033",
+    "word": "merchandise",
+    "meaning": "상품",
+    "pronunciation": "/ˈmɜːrtʃəndaɪz/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All merchandise must be inspected before being shipped to retailers.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-034",
+    "word": "subsidiary",
+    "meaning": "자회사",
+    "pronunciation": "/səbˈsɪdiɛri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company operates through several subsidiaries in Europe and Asia.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-035",
+    "word": "allocate",
+    "meaning": "배분하다",
+    "pronunciation": "/ˈæləkeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The manager will allocate additional resources to the marketing team.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-036",
+    "word": "vendor",
+    "meaning": "공급업체",
+    "pronunciation": "/ˈvɛndər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "We need to select a new vendor for our office supplies.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-037",
+    "word": "warehouse",
+    "meaning": "창고",
+    "pronunciation": "/ˈwɛərhaʊs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The new warehouse is located near the main distribution center.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-038",
+    "word": "procurement",
+    "meaning": "조달",
+    "pronunciation": "/prəˈkjʊərmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The procurement department is responsible for sourcing raw materials.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-039",
+    "word": "oversight",
+    "meaning": "감독, 실수",
+    "pronunciation": "/ˈoʊvərsaɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Due to an oversight, the report was submitted without the appendix.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-040",
+    "word": "productivity",
+    "meaning": "생산성",
+    "pronunciation": "/ˌprɒdʌkˈtɪvɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company invested in new equipment to boost productivity.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-041",
+    "word": "competent",
+    "meaning": "유능한",
+    "pronunciation": "/ˈkɒmpɪtənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The firm is looking for competent individuals to lead the new division.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-042",
+    "word": "consensus",
+    "meaning": "합의",
+    "pronunciation": "/kənˈsɛnsəs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The committee reached a consensus on the proposed changes to the policy.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-043",
+    "word": "feasible",
+    "meaning": "실현 가능한",
+    "pronunciation": "/ˈfiːzəbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The engineering team determined that the project was technically feasible.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-044",
+    "word": "notify",
+    "meaning": "통지하다",
+    "pronunciation": "/ˈnoʊtɪfaɪ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Please notify all staff members about the upcoming maintenance schedule.",
+    "category": "business",
+    "difficulty": "basic"
+  },
+  {
+    "id": "biz-045",
+    "word": "invoice",
+    "meaning": "송장, 청구서",
+    "pronunciation": "/ˈɪnvɔɪs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The invoice must be paid within 30 days of the delivery date.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-046",
+    "word": "acquisition",
+    "meaning": "인수",
+    "pronunciation": "/ˌækwɪˈzɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The acquisition of the rival company was finalized last month.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-047",
+    "word": "inquire",
+    "meaning": "문의하다",
+    "pronunciation": "/ɪnˈkwaɪər/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Customers may inquire about product availability by calling the service center.",
+    "category": "business",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "biz-048",
+    "word": "stringent",
+    "meaning": "엄격한",
+    "pronunciation": "/ˈstrɪndʒənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The factory must meet stringent quality control standards.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-049",
+    "word": "correspondence",
+    "meaning": "서신, 통신",
+    "pronunciation": "/ˌkɒrɪˈspɒndəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All official correspondence should be directed to the head office.",
+    "category": "business",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "biz-050",
+    "word": "consolidate",
+    "meaning": "통합하다",
+    "pronunciation": "/kənˈsɒlɪdeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company plans to consolidate its regional offices into one central location.",
+    "category": "business",
+    "difficulty": "intermediate"
+  }
+]

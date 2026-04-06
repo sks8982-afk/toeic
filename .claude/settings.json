@@ -1,7 +1,46 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm)",
+      "Bash(claude /plugin marketplace add popup-studio-ai/bkit-claude-code)",
+      "Read(//c/Users/jungm/AppData/Local/Temp/claude/c--Users-jungm-Desktop-myprojects-toeic/162718e6-328e-4636-bebf-26241b61275c/tasks/**)",
+      "Bash(npx bkit-claude-code:*)",
+      "Bash(gh search:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "Bash(git clone:*)",
+      "Read(//tmp/**)",
+      "Bash(ls -d /tmp/bkit-claude-code/*/)",
+      "Read(//tmp/bkit-claude-code/**)",
+      "Read(//c/tmp/bkit-claude-code/**)",
+      "Bash(mkdir -p /c/Users/jungm/Desktop/myprojects/toeic/.claude/agents)",
+      "Bash(mkdir -p /c/Users/jungm/Desktop/myprojects/toeic/.claude/skills)",
+      "Bash(mkdir -p /c/Users/jungm/Desktop/myprojects/toeic/.claude/commands)",
+      "Bash(cp -r /tmp/bkit-claude-code/agents/* /c/Users/jungm/Desktop/myprojects/toeic/.claude/agents/)",
+      "Bash(cp -r /tmp/bkit-claude-code/skills/* /c/Users/jungm/Desktop/myprojects/toeic/.claude/skills/)",
+      "Bash(cp -r /tmp/bkit-claude-code/commands/* /c/Users/jungm/Desktop/myprojects/toeic/.claude/commands/)",
+      "Bash(cp -r /tmp/bkit-claude-code/hooks /c/Users/jungm/Desktop/myprojects/toeic/.claude/hooks)",
+      "Bash(cp -r /tmp/bkit-claude-code/scripts /c/Users/jungm/Desktop/myprojects/toeic/.claude/scripts)",
+      "Bash(cp -r /tmp/bkit-claude-code/lib /c/Users/jungm/Desktop/myprojects/toeic/.claude/lib)",
+      "Bash(cp -r /tmp/bkit-claude-code/templates /c/Users/jungm/Desktop/myprojects/toeic/.claude/templates)",
+      "Bash(cp -r /tmp/bkit-claude-code/output-styles /c/Users/jungm/Desktop/myprojects/toeic/.claude/output-styles)",
+      "Bash(claude --version)",
+      "WebFetch(domain:www.bkit.ai)",
+      "mcp__firecrawl__firecrawl_scrape",
+      "Bash(claude -p)",
+      "Bash(claude /help)",
+      "Bash(claude plugin:*)",
+      "Read(//c/Users/jungm/.claude/plugins/**)",
+      "Read(//c/Users/jungm/.claude/**)",
+      "Bash(ls ~/.claude/plugins/cache/bkit-marketplace/bkit/2.0.8/*.json)",
+      "Skill(bkit:pdca)",
+      "Skill(bkit:pdca:*)",
+      "Bash(npm run:*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(npx next:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\jungm\\Desktop\\myprojects\\toeic\\.claude\\agents"
     ]
   }
 }

@@ -1,0 +1,502 @@
+[
+  {
+    "id": "trv-001",
+    "word": "reservation",
+    "meaning": "예약",
+    "pronunciation": "/ˌrɛzərˈveɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "I would like to make a reservation for two guests on Saturday evening.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-002",
+    "word": "departure",
+    "meaning": "출발",
+    "pronunciation": "/dɪˈpɑːrtʃər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The departure time for Flight 302 has been changed to 3:15 p.m.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-003",
+    "word": "luggage",
+    "meaning": "수하물",
+    "pronunciation": "/ˈlʌɡɪdʒ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Passengers are allowed to bring one piece of carry-on luggage onto the aircraft.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-004",
+    "word": "customs",
+    "meaning": "세관",
+    "pronunciation": "/ˈkʌstəmz/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All travelers must pass through customs upon arrival at the international terminal.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-005",
+    "word": "accommodation",
+    "meaning": "숙소",
+    "pronunciation": "/əˌkɒməˈdeɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The travel agency can arrange accommodation near the conference venue.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-006",
+    "word": "passport",
+    "meaning": "여권",
+    "pronunciation": "/ˈpæspɔːrt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please ensure your passport is valid for at least six months before traveling.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-007",
+    "word": "destination",
+    "meaning": "목적지",
+    "pronunciation": "/ˌdɛstɪˈneɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Bangkok is one of the most popular tourist destinations in Southeast Asia.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-008",
+    "word": "boarding",
+    "meaning": "탑승",
+    "pronunciation": "/ˈbɔːrdɪŋ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Boarding will begin 30 minutes before the scheduled departure time.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-009",
+    "word": "terminal",
+    "meaning": "터미널",
+    "pronunciation": "/ˈtɜːrmɪnəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "International flights depart from Terminal 2 at the main airport.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-010",
+    "word": "arrival",
+    "meaning": "도착",
+    "pronunciation": "/əˈraɪvəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Upon arrival at the hotel, guests should check in at the front desk.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-011",
+    "word": "itinerary",
+    "meaning": "여행 일정표",
+    "pronunciation": "/aɪˈtɪnərɛri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A detailed itinerary will be emailed to all tour participants before departure.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-012",
+    "word": "cancel",
+    "meaning": "취소하다",
+    "pronunciation": "/ˈkænsəl/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Guests who cancel their reservation less than 24 hours in advance will be charged a fee.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-013",
+    "word": "delay",
+    "meaning": "지연",
+    "pronunciation": "/dɪˈleɪ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Due to heavy fog, there will be a two-hour delay for all outbound flights.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-014",
+    "word": "transfer",
+    "meaning": "환승",
+    "pronunciation": "/ˈtrænsfɜːr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A shuttle transfer from the airport to the hotel is included in the package.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-015",
+    "word": "fare",
+    "meaning": "요금",
+    "pronunciation": "/fɛr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The round-trip fare to London has been reduced for the holiday season.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-016",
+    "word": "excursion",
+    "meaning": "소풍, 관광",
+    "pronunciation": "/ɪkˈskɜːrʒən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The cruise offers several optional excursions at each port of call.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-017",
+    "word": "baggage",
+    "meaning": "수하물",
+    "pronunciation": "/ˈbæɡɪdʒ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Checked baggage must not exceed 23 kilograms per piece.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-018",
+    "word": "currency",
+    "meaning": "통화",
+    "pronunciation": "/ˈkʌrənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "It is advisable to exchange currency before arriving at your destination.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-019",
+    "word": "souvenir",
+    "meaning": "기념품",
+    "pronunciation": "/ˌsuːvəˈnɪr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The gift shop near the exit sells a variety of souvenirs and local crafts.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-020",
+    "word": "scenic",
+    "meaning": "경치 좋은",
+    "pronunciation": "/ˈsiːnɪk/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The scenic coastal road offers breathtaking views of the ocean.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-021",
+    "word": "sightseeing",
+    "meaning": "관광",
+    "pronunciation": "/ˈsaɪtsiːɪŋ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The guided sightseeing tour includes visits to all major landmarks in the city.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-022",
+    "word": "complimentary",
+    "meaning": "무료의",
+    "pronunciation": "/ˌkɒmplɪˈmɛntəri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The hotel provides complimentary shuttle service to and from the airport.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-023",
+    "word": "vacancy",
+    "meaning": "빈 방",
+    "pronunciation": "/ˈveɪkənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Unfortunately, there are no vacancies at the hotel during the holiday weekend.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-024",
+    "word": "embark",
+    "meaning": "탑승하다",
+    "pronunciation": "/ɪmˈbɑːrk/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Passengers will embark at Pier 5 beginning at 11 a.m.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-025",
+    "word": "aisle",
+    "meaning": "통로",
+    "pronunciation": "/aɪl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Would you prefer a window seat or an aisle seat for your flight?",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-026",
+    "word": "layover",
+    "meaning": "경유",
+    "pronunciation": "/ˈleɪoʊvər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The flight includes a three-hour layover at Tokyo Narita Airport.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-027",
+    "word": "immigration",
+    "meaning": "출입국 관리",
+    "pronunciation": "/ˌɪmɪˈɡreɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "You will need to present your visa at the immigration counter upon arrival.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-028",
+    "word": "domestic",
+    "meaning": "국내의",
+    "pronunciation": "/dəˈmɛstɪk/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Domestic flights operate from Terminal 1, while international flights use Terminal 2.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-029",
+    "word": "turbulence",
+    "meaning": "난기류",
+    "pronunciation": "/ˈtɜːrbjələns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The captain advised passengers to fasten their seatbelts due to expected turbulence.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-030",
+    "word": "visa",
+    "meaning": "비자",
+    "pronunciation": "/ˈviːzə/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Travelers from certain countries may need to obtain a visa prior to entry.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-031",
+    "word": "cabin",
+    "meaning": "객실",
+    "pronunciation": "/ˈkæbɪn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The cruise ship's cabins are equipped with ocean-view windows and private bathrooms.",
+    "category": "travel",
+    "difficulty": "basic"
+  },
+  {
+    "id": "trv-032",
+    "word": "amenity",
+    "meaning": "편의 시설",
+    "pronunciation": "/əˈmɛnɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The resort offers a wide range of amenities, including a spa and fitness center.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-033",
+    "word": "voucher",
+    "meaning": "바우처",
+    "pronunciation": "/ˈvaʊtʃər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Passengers affected by the cancellation will receive a travel voucher as compensation.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-034",
+    "word": "duration",
+    "meaning": "기간",
+    "pronunciation": "/djʊˈreɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The total duration of the flight from Seoul to New York is approximately 14 hours.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-035",
+    "word": "expedition",
+    "meaning": "탐험",
+    "pronunciation": "/ˌɛkspɪˈdɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The expedition to the mountain summit requires prior hiking experience.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-036",
+    "word": "quarantine",
+    "meaning": "검역",
+    "pronunciation": "/ˈkwɒrəntiːn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Certain agricultural products may be subject to quarantine inspection.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-037",
+    "word": "embarkation",
+    "meaning": "승선",
+    "pronunciation": "/ˌɛmbɑːrˈkeɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The embarkation point for the river cruise is located at the central pier.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-038",
+    "word": "disembark",
+    "meaning": "하선하다",
+    "pronunciation": "/ˌdɪsɪmˈbɑːrk/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Passengers will disembark at the port of call for a guided walking tour.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-039",
+    "word": "mandatory",
+    "meaning": "필수적인",
+    "pronunciation": "/ˈmændətɔːri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "A mandatory health screening is required for all passengers entering the country.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-040",
+    "word": "reconfirm",
+    "meaning": "재확인하다",
+    "pronunciation": "/ˌriːkənˈfɜːrm/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Passengers are advised to reconfirm their return flights 72 hours before departure.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-041",
+    "word": "concierge",
+    "meaning": "안내 데스크",
+    "pronunciation": "/ˌkɒnsiˈɛrʒ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The concierge can assist you with restaurant reservations and tour bookings.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-042",
+    "word": "override",
+    "meaning": "무효로 하다",
+    "pronunciation": "/ˌoʊvərˈraɪd/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The airline manager can override the booking restriction in special circumstances.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-043",
+    "word": "surcharge",
+    "meaning": "추가 요금",
+    "pronunciation": "/ˈsɜːrtʃɑːrdʒ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A fuel surcharge will be applied to all international flights starting next month.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-044",
+    "word": "adjacent",
+    "meaning": "인접한",
+    "pronunciation": "/əˈdʒeɪsənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The hotel is adjacent to the train station, making it ideal for travelers.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-045",
+    "word": "transit",
+    "meaning": "경유, 환승",
+    "pronunciation": "/ˈtrænzɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Transit passengers may wait in the designated lounge between connecting flights.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-046",
+    "word": "hospitality",
+    "meaning": "환대",
+    "pronunciation": "/ˌhɒspɪˈtælɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The staff at the resort is known for its exceptional hospitality.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "trv-047",
+    "word": "detain",
+    "meaning": "억류하다",
+    "pronunciation": "/dɪˈteɪn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Customs officers may detain travelers whose documents are not in order.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-048",
+    "word": "reimburse",
+    "meaning": "환불하다",
+    "pronunciation": "/ˌriːɪmˈbɜːrs/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The airline agreed to reimburse passengers for expenses caused by the flight cancellation.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-049",
+    "word": "itinerant",
+    "meaning": "순회하는",
+    "pronunciation": "/aɪˈtɪnərənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The itinerant exhibition will be displayed at museums across the country.",
+    "category": "travel",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "trv-050",
+    "word": "punctual",
+    "meaning": "시간을 엄수하는",
+    "pronunciation": "/ˈpʌŋktʃuəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The train service is known for being punctual and reliable throughout the year.",
+    "category": "travel",
+    "difficulty": "intermediate"
+  }
+]

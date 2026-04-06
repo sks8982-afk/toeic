@@ -1,0 +1,502 @@
+[
+  {
+    "id": "mkt-001",
+    "word": "campaign",
+    "meaning": "캠페인",
+    "pronunciation": "/kæmˈpeɪn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The marketing team launched a new campaign to promote the product line.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-002",
+    "word": "advertisement",
+    "meaning": "광고",
+    "pronunciation": "/ˌædvərˈtaɪzmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The advertisement will be placed in major newspapers and online platforms.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-003",
+    "word": "brand",
+    "meaning": "브랜드",
+    "pronunciation": "/brænd/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Building a strong brand identity is essential for long-term business success.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-004",
+    "word": "survey",
+    "meaning": "설문 조사",
+    "pronunciation": "/ˈsɜːrveɪ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A customer satisfaction survey was conducted to gather feedback on the service.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-005",
+    "word": "target",
+    "meaning": "목표, 대상",
+    "pronunciation": "/ˈtɑːrɡɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The target audience for this product is young professionals aged 25 to 35.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-006",
+    "word": "promote",
+    "meaning": "홍보하다",
+    "pronunciation": "/prəˈmoʊt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company will promote its new service through social media channels.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-007",
+    "word": "launch",
+    "meaning": "출시하다",
+    "pronunciation": "/lɔːntʃ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company plans to launch the new product at the annual trade show.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-008",
+    "word": "consumer",
+    "meaning": "소비자",
+    "pronunciation": "/kənˈsuːmər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Consumer demand for eco-friendly products has increased significantly.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-009",
+    "word": "discount",
+    "meaning": "할인",
+    "pronunciation": "/ˈdɪskaʊnt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Members receive a 20 percent discount on all purchases during the sale.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-010",
+    "word": "competitor",
+    "meaning": "경쟁사",
+    "pronunciation": "/kəmˈpɛtɪtər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Analyzing competitors' strategies helps companies stay ahead in the market.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-011",
+    "word": "slogan",
+    "meaning": "슬로건",
+    "pronunciation": "/ˈsloʊɡən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The creative team developed a catchy slogan for the new advertising campaign.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-012",
+    "word": "brochure",
+    "meaning": "브로셔",
+    "pronunciation": "/broʊˈʃʊr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Product brochures will be distributed at the upcoming industry conference.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-013",
+    "word": "endorsement",
+    "meaning": "보증, 추천",
+    "pronunciation": "/ɪnˈdɔːrsmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Celebrity endorsements can significantly boost a product's visibility.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-014",
+    "word": "segment",
+    "meaning": "시장 세분화",
+    "pronunciation": "/ˈsɛɡmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The premium segment accounts for 30 percent of total sales revenue.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-015",
+    "word": "testimonial",
+    "meaning": "추천사",
+    "pronunciation": "/ˌtɛstɪˈmoʊniəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customer testimonials are featured on the company's website to build trust.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-016",
+    "word": "demographic",
+    "meaning": "인구 통계학적",
+    "pronunciation": "/ˌdɛməˈɡræfɪk/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The study analyzed demographic trends to identify potential growth markets.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-017",
+    "word": "publicity",
+    "meaning": "홍보",
+    "pronunciation": "/pʌbˈlɪsɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The charity event generated significant publicity for the company.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-018",
+    "word": "retail",
+    "meaning": "소매",
+    "pronunciation": "/ˈriːteɪl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The retail price of the product has been reduced to attract more customers.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-019",
+    "word": "wholesale",
+    "meaning": "도매",
+    "pronunciation": "/ˈhoʊlseɪl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company offers wholesale pricing to distributors who order in bulk.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-020",
+    "word": "niche",
+    "meaning": "틈새 시장",
+    "pronunciation": "/niːʃ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The startup found a profitable niche in the organic skincare market.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-021",
+    "word": "feedback",
+    "meaning": "피드백",
+    "pronunciation": "/ˈfiːdbæk/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customer feedback is essential for improving the quality of our services.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-022",
+    "word": "exposure",
+    "meaning": "노출",
+    "pronunciation": "/ɪkˈspoʊʒər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Sponsoring the event will give the brand significant media exposure.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-023",
+    "word": "penetration",
+    "meaning": "침투",
+    "pronunciation": "/ˌpɛnɪˈtreɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Market penetration in Southeast Asia has grown rapidly over the past year.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-024",
+    "word": "rebate",
+    "meaning": "리베이트, 환급",
+    "pronunciation": "/ˈriːbeɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customers who purchase before December 31 will receive a $50 mail-in rebate.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-025",
+    "word": "trademark",
+    "meaning": "상표",
+    "pronunciation": "/ˈtreɪdmɑːrk/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company registered its logo as a trademark to protect its brand identity.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-026",
+    "word": "flyer",
+    "meaning": "전단지",
+    "pronunciation": "/ˈflaɪər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Promotional flyers will be handed out at the entrance of the shopping mall.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-027",
+    "word": "diversify",
+    "meaning": "다양화하다",
+    "pronunciation": "/daɪˈvɜːrsɪfaɪ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company decided to diversify its product range to reach new customers.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-028",
+    "word": "acquisition",
+    "meaning": "고객 확보",
+    "pronunciation": "/ˌækwɪˈzɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customer acquisition costs have decreased thanks to the digital marketing strategy.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-029",
+    "word": "outreach",
+    "meaning": "홍보 활동",
+    "pronunciation": "/ˈaʊtriːtʃ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The marketing department expanded its community outreach efforts this year.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-030",
+    "word": "prospective",
+    "meaning": "잠재적인",
+    "pronunciation": "/prəˈspɛktɪv/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Prospective clients were invited to a product demonstration at the showroom.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-031",
+    "word": "optimize",
+    "meaning": "최적화하다",
+    "pronunciation": "/ˈɒptɪmaɪz/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The team worked to optimize the website for better search engine rankings.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-032",
+    "word": "leverage",
+    "meaning": "활용하다",
+    "pronunciation": "/ˈlɛvərɪdʒ/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company plans to leverage social media to increase brand awareness.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-033",
+    "word": "coupon",
+    "meaning": "쿠폰",
+    "pronunciation": "/ˈkuːpɒn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customers can redeem the coupon for a 15 percent discount on their next order.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-034",
+    "word": "referral",
+    "meaning": "추천, 소개",
+    "pronunciation": "/rɪˈfɜːrəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The referral program rewards existing customers for recommending new clients.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-035",
+    "word": "analyze",
+    "meaning": "분석하다",
+    "pronunciation": "/ˈænəlaɪz/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The research team will analyze consumer purchasing patterns over the past year.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-036",
+    "word": "innovative",
+    "meaning": "혁신적인",
+    "pronunciation": "/ˈɪnəveɪtɪv/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The company is known for its innovative approach to product design.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-037",
+    "word": "benchmark",
+    "meaning": "기준점",
+    "pronunciation": "/ˈbɛntʃmɑːrk/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Industry benchmarks were used to evaluate the effectiveness of the campaign.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-038",
+    "word": "saturation",
+    "meaning": "포화",
+    "pronunciation": "/ˌsætʃəˈreɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Market saturation in the domestic market has led the company to explore exports.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-039",
+    "word": "franchise",
+    "meaning": "프랜차이즈",
+    "pronunciation": "/ˈfræntʃaɪz/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The restaurant chain expanded rapidly through its franchise model.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-040",
+    "word": "warranty",
+    "meaning": "보증",
+    "pronunciation": "/ˈwɒrənti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All products come with a two-year warranty covering parts and labor.",
+    "category": "marketing",
+    "difficulty": "basic"
+  },
+  {
+    "id": "mkt-041",
+    "word": "compatible",
+    "meaning": "호환 가능한",
+    "pronunciation": "/kəmˈpætɪbəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The new software is compatible with all major operating systems.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-042",
+    "word": "clientele",
+    "meaning": "고객층",
+    "pronunciation": "/ˌklaɪənˈtɛl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The boutique hotel attracts an international clientele throughout the year.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-043",
+    "word": "supplement",
+    "meaning": "보충하다",
+    "pronunciation": "/ˈsʌplɪmənt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Online advertising was used to supplement the print media campaign.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-044",
+    "word": "lucrative",
+    "meaning": "수익성 있는",
+    "pronunciation": "/ˈluːkrətɪv/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The partnership turned out to be a lucrative opportunity for both companies.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-045",
+    "word": "inventory",
+    "meaning": "재고",
+    "pronunciation": "/ˈɪnvəntɔːri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The store needs to clear its inventory before the new collection arrives.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-046",
+    "word": "complimentary",
+    "meaning": "무료의",
+    "pronunciation": "/ˌkɒmplɪˈmɛntəri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "All attendees will receive a complimentary sample of the new product.",
+    "category": "marketing",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "mkt-047",
+    "word": "monopoly",
+    "meaning": "독점",
+    "pronunciation": "/məˈnɒpəli/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Antitrust laws prevent any single company from establishing a monopoly.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-048",
+    "word": "revamp",
+    "meaning": "개편하다",
+    "pronunciation": "/riːˈvæmp/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company decided to revamp its website to improve the user experience.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-049",
+    "word": "proprietary",
+    "meaning": "독점적인",
+    "pronunciation": "/prəˈpraɪətəri/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The software uses proprietary technology that cannot be replicated by competitors.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "mkt-050",
+    "word": "unveil",
+    "meaning": "공개하다",
+    "pronunciation": "/ʌnˈveɪl/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The CEO will unveil the company's latest innovation at the press conference.",
+    "category": "marketing",
+    "difficulty": "advanced"
+  }
+]

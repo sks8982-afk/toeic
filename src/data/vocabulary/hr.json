@@ -1,0 +1,502 @@
+[
+  {
+    "id": "hr-001",
+    "word": "recruit",
+    "meaning": "모집하다",
+    "pronunciation": "/rɪˈkruːt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company plans to recruit 50 new employees for the IT department.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-002",
+    "word": "resign",
+    "meaning": "사직하다",
+    "pronunciation": "/rɪˈzaɪn/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "She decided to resign from her position to pursue further education.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-003",
+    "word": "salary",
+    "meaning": "급여",
+    "pronunciation": "/ˈsæləri/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The starting salary for this position is competitive within the industry.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-004",
+    "word": "benefits",
+    "meaning": "복리후생",
+    "pronunciation": "/ˈbɛnɪfɪts/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company offers comprehensive benefits including health insurance and paid leave.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-005",
+    "word": "promotion",
+    "meaning": "승진",
+    "pronunciation": "/prəˈmoʊʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "After five years of dedicated service, she received a well-deserved promotion.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-006",
+    "word": "applicant",
+    "meaning": "지원자",
+    "pronunciation": "/ˈæplɪkənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All applicants must submit a resume and cover letter by the closing date.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-007",
+    "word": "interview",
+    "meaning": "면접",
+    "pronunciation": "/ˈɪntərvjuː/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Candidates who pass the initial screening will be invited for an interview.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-008",
+    "word": "qualification",
+    "meaning": "자격",
+    "pronunciation": "/ˌkwɒlɪfɪˈkeɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A master's degree is among the preferred qualifications for this role.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-009",
+    "word": "training",
+    "meaning": "교육, 훈련",
+    "pronunciation": "/ˈtreɪnɪŋ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "New hires are required to complete a two-week training program.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-010",
+    "word": "employee",
+    "meaning": "직원",
+    "pronunciation": "/ɪmˈplɔɪiː/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All employees are expected to attend the mandatory safety workshop.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-011",
+    "word": "evaluate",
+    "meaning": "평가하다",
+    "pronunciation": "/ɪˈvæljueɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Managers are required to evaluate employee performance on an annual basis.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-012",
+    "word": "orientation",
+    "meaning": "오리엔테이션",
+    "pronunciation": "/ˌɔːriɛnˈteɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "New employee orientation will be held in the main conference room on Monday.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-013",
+    "word": "compensation",
+    "meaning": "보상, 급여",
+    "pronunciation": "/ˌkɒmpənˈseɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The compensation package includes a base salary, bonuses, and stock options.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-014",
+    "word": "supervisor",
+    "meaning": "상사, 감독관",
+    "pronunciation": "/ˈsuːpərvaɪzər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Employees should report any workplace issues directly to their supervisor.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-015",
+    "word": "overtime",
+    "meaning": "초과 근무",
+    "pronunciation": "/ˈoʊvərtaɪm/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Overtime pay will be calculated at one and a half times the regular hourly rate.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-016",
+    "word": "transfer",
+    "meaning": "전근, 이동",
+    "pronunciation": "/ˈtrænsfɜːr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "He requested a transfer to the company's branch in Singapore.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-017",
+    "word": "probation",
+    "meaning": "수습 기간",
+    "pronunciation": "/proʊˈbeɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All new employees must complete a three-month probation period.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-018",
+    "word": "appraisal",
+    "meaning": "인사 평가",
+    "pronunciation": "/əˈpreɪzəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Performance appraisals are conducted twice a year to assess employee progress.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-019",
+    "word": "layoff",
+    "meaning": "해고, 정리 해고",
+    "pronunciation": "/ˈleɪɒf/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company announced layoffs affecting 200 workers due to budget cuts.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-020",
+    "word": "workforce",
+    "meaning": "노동력",
+    "pronunciation": "/ˈwɜːrkfɔːrs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company is investing in technology to upskill its workforce.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-021",
+    "word": "tenure",
+    "meaning": "재직 기간",
+    "pronunciation": "/ˈtɛnjər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "During her tenure as CEO, the company doubled its market share.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-022",
+    "word": "shortlist",
+    "meaning": "최종 후보 명단",
+    "pronunciation": "/ˈʃɔːrtlɪst/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Five candidates have been placed on the shortlist for the director position.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-023",
+    "word": "onboarding",
+    "meaning": "입사 절차",
+    "pronunciation": "/ˈɒnbɔːrdɪŋ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The onboarding process includes setting up IT access and meeting team members.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-024",
+    "word": "incentive",
+    "meaning": "인센티브",
+    "pronunciation": "/ɪnˈsɛntɪv/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company introduced performance-based incentives to motivate employees.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-025",
+    "word": "retention",
+    "meaning": "유지, 보유",
+    "pronunciation": "/rɪˈtɛnʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Employee retention has improved since the company enhanced its benefits package.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-026",
+    "word": "outsource",
+    "meaning": "외주를 주다",
+    "pronunciation": "/ˈaʊtsɔːrs/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company decided to outsource its customer support operations.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-027",
+    "word": "attendance",
+    "meaning": "출근, 출석",
+    "pronunciation": "/əˈtɛndəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Regular attendance is a key factor in the annual performance review.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-028",
+    "word": "mentor",
+    "meaning": "멘토",
+    "pronunciation": "/ˈmɛntɔːr/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Each new employee is assigned a mentor to guide them during the first year.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-029",
+    "word": "compliance",
+    "meaning": "준수",
+    "pronunciation": "/kəmˈplaɪəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The HR department ensures compliance with all labor laws and regulations.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-030",
+    "word": "harassment",
+    "meaning": "괴롭힘",
+    "pronunciation": "/həˈræsmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company has a strict policy against workplace harassment of any kind.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-031",
+    "word": "dismissal",
+    "meaning": "해고",
+    "pronunciation": "/dɪsˈmɪsəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Repeated violations of company policy may result in immediate dismissal.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-032",
+    "word": "credential",
+    "meaning": "자격증",
+    "pronunciation": "/krɪˈdɛnʃəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Applicants with professional credentials will be given priority consideration.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-033",
+    "word": "delegate",
+    "meaning": "위임하다",
+    "pronunciation": "/ˈdɛlɪɡeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Managers should delegate routine tasks so they can focus on strategic planning.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-034",
+    "word": "absenteeism",
+    "meaning": "결근",
+    "pronunciation": "/ˌæbsənˈtiːɪzəm/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "High absenteeism rates may indicate low employee morale or job dissatisfaction.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-035",
+    "word": "redundancy",
+    "meaning": "정리 해고",
+    "pronunciation": "/rɪˈdʌndənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Several employees were offered redundancy packages as part of the restructuring.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-036",
+    "word": "remuneration",
+    "meaning": "보수",
+    "pronunciation": "/rɪˌmjuːnəˈreɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Total remuneration for this position includes salary, bonuses, and retirement benefits.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-037",
+    "word": "vacancy",
+    "meaning": "공석",
+    "pronunciation": "/ˈveɪkənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The vacancy for the accounting manager role will be posted on the company website.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-038",
+    "word": "terminate",
+    "meaning": "해지하다",
+    "pronunciation": "/ˈtɜːrmɪneɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Either party may terminate the employment contract with 30 days' notice.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-039",
+    "word": "confidential",
+    "meaning": "기밀의",
+    "pronunciation": "/ˌkɒnfɪˈdɛnʃəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Personnel files are strictly confidential and may not be shared without authorization.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-040",
+    "word": "proficient",
+    "meaning": "능숙한",
+    "pronunciation": "/prəˈfɪʃənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Candidates must be proficient in Microsoft Office and project management tools.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-041",
+    "word": "subordinate",
+    "meaning": "부하 직원",
+    "pronunciation": "/səˈbɔːrdɪnət/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A good leader provides constructive feedback to subordinates on a regular basis.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-042",
+    "word": "reimbursement",
+    "meaning": "환급",
+    "pronunciation": "/ˌriːɪmˈbɜːrsmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Employees may apply for tuition reimbursement for approved courses.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "hr-043",
+    "word": "sabbatical",
+    "meaning": "안식년",
+    "pronunciation": "/səˈbætɪkəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "After ten years of service, employees are eligible for a paid sabbatical.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-044",
+    "word": "attrition",
+    "meaning": "자연 감소",
+    "pronunciation": "/əˈtrɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The workforce was reduced through natural attrition rather than layoffs.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-045",
+    "word": "prerequisite",
+    "meaning": "전제 조건",
+    "pronunciation": "/priːˈrɛkwɪzɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A background check is a prerequisite for employment at this organization.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-046",
+    "word": "resume",
+    "meaning": "이력서",
+    "pronunciation": "/ˈrɛzjʊmeɪ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please submit your resume along with two professional references.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-047",
+    "word": "seniority",
+    "meaning": "연공서열",
+    "pronunciation": "/siːniˈɔːrɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Promotions are partly based on seniority and partly on performance.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-048",
+    "word": "internship",
+    "meaning": "인턴십",
+    "pronunciation": "/ˈɪntɜːrnʃɪp/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The summer internship program is open to undergraduate and graduate students.",
+    "category": "hr",
+    "difficulty": "basic"
+  },
+  {
+    "id": "hr-049",
+    "word": "grievance",
+    "meaning": "불만, 고충",
+    "pronunciation": "/ˈɡriːvəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Employees may file a formal grievance through the HR department.",
+    "category": "hr",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "hr-050",
+    "word": "allocate",
+    "meaning": "배정하다",
+    "pronunciation": "/ˈæləkeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "HR will allocate office space to new team members before their start date.",
+    "category": "hr",
+    "difficulty": "intermediate"
+  }
+]

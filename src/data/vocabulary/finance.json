@@ -1,0 +1,502 @@
+[
+  {
+    "id": "fin-001",
+    "word": "budget",
+    "meaning": "예산",
+    "pronunciation": "/ˈbʌdʒɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The department's annual budget has been approved by the finance committee.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-002",
+    "word": "investment",
+    "meaning": "투자",
+    "pronunciation": "/ɪnˈvɛstmənt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company made a significant investment in renewable energy technology.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-003",
+    "word": "profit",
+    "meaning": "이익",
+    "pronunciation": "/ˈprɒfɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Net profit increased by 20 percent compared to the previous fiscal year.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-004",
+    "word": "expense",
+    "meaning": "비용",
+    "pronunciation": "/ɪkˈspɛns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Travel expenses must be documented and submitted for reimbursement.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-005",
+    "word": "audit",
+    "meaning": "감사",
+    "pronunciation": "/ˈɔːdɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "An external audit of the company's financial records will take place in March.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-006",
+    "word": "asset",
+    "meaning": "자산",
+    "pronunciation": "/ˈæsɛt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company's total assets are valued at over 50 million dollars.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-007",
+    "word": "liability",
+    "meaning": "부채",
+    "pronunciation": "/ˌlaɪəˈbɪlɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The firm needs to reduce its liabilities before seeking additional loans.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-008",
+    "word": "deposit",
+    "meaning": "예금, 보증금",
+    "pronunciation": "/dɪˈpɒzɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A deposit of 10 percent is required to secure the rental agreement.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-009",
+    "word": "withdraw",
+    "meaning": "인출하다",
+    "pronunciation": "/wɪðˈdrɔː/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Customers can withdraw funds from any branch of the bank.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-010",
+    "word": "loan",
+    "meaning": "대출",
+    "pronunciation": "/loʊn/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The bank approved a loan for the construction of the new facility.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-011",
+    "word": "interest",
+    "meaning": "이자",
+    "pronunciation": "/ˈɪntrəst/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The annual interest rate on savings accounts has been raised to 3.5 percent.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-012",
+    "word": "transaction",
+    "meaning": "거래",
+    "pronunciation": "/trænˈzækʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All financial transactions are recorded in the company's accounting system.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-013",
+    "word": "refund",
+    "meaning": "환불",
+    "pronunciation": "/ˈriːfʌnd/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Customers who return items within 14 days are eligible for a full refund.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-014",
+    "word": "balance",
+    "meaning": "잔액",
+    "pronunciation": "/ˈbæləns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please check your account balance before making any large purchases.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-015",
+    "word": "deduction",
+    "meaning": "공제",
+    "pronunciation": "/dɪˈdʌkʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Tax deductions for charitable contributions may reduce your overall tax burden.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-016",
+    "word": "revenue",
+    "meaning": "세입, 수익",
+    "pronunciation": "/ˈrevənjuː/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Government revenue from corporate taxes declined sharply this year.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-017",
+    "word": "reimburse",
+    "meaning": "상환하다",
+    "pronunciation": "/ˌriːɪmˈbɜːrs/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The company will reimburse employees for all approved travel expenses.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-018",
+    "word": "mortgage",
+    "meaning": "담보 대출",
+    "pronunciation": "/ˈmɔːrɡɪdʒ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The couple applied for a mortgage to purchase their first home.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-019",
+    "word": "invoice",
+    "meaning": "청구서",
+    "pronunciation": "/ˈɪnvɔɪs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please send the invoice to the accounts payable department for processing.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-020",
+    "word": "fiscal",
+    "meaning": "회계의",
+    "pronunciation": "/ˈfɪskəl/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "The fiscal year ends on December 31 for most publicly traded companies.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-021",
+    "word": "dividend",
+    "meaning": "배당금",
+    "pronunciation": "/ˈdɪvɪdɛnd/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Shareholders will receive a quarterly dividend of $1.50 per share.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-022",
+    "word": "inflation",
+    "meaning": "인플레이션",
+    "pronunciation": "/ɪnˈfleɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Rising inflation has led the central bank to increase interest rates.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-023",
+    "word": "depreciation",
+    "meaning": "감가상각",
+    "pronunciation": "/dɪˌpriːʃiˈeɪʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The depreciation of equipment is calculated over a five-year period.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-024",
+    "word": "surplus",
+    "meaning": "흑자, 잉여",
+    "pronunciation": "/ˈsɜːrpləs/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The government reported a budget surplus for the first time in a decade.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-025",
+    "word": "deficit",
+    "meaning": "적자",
+    "pronunciation": "/ˈdɛfɪsɪt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The trade deficit widened due to increased imports of raw materials.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-026",
+    "word": "portfolio",
+    "meaning": "투자 포트폴리오",
+    "pronunciation": "/pɔːrtˈfoʊlioʊ/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Financial advisors recommend diversifying your investment portfolio.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-027",
+    "word": "equity",
+    "meaning": "자기자본",
+    "pronunciation": "/ˈɛkwɪti/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The company raised additional equity through the sale of new shares.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-028",
+    "word": "collateral",
+    "meaning": "담보",
+    "pronunciation": "/kəˈlætərəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The bank requires collateral before approving a business loan.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-029",
+    "word": "allocate",
+    "meaning": "배정하다",
+    "pronunciation": "/ˈæləkeɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The finance team will allocate funds to each department based on projected needs.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-030",
+    "word": "expenditure",
+    "meaning": "지출",
+    "pronunciation": "/ɪkˈspɛndɪtʃər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Capital expenditure for the new factory exceeded the original estimate.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-031",
+    "word": "account",
+    "meaning": "계좌",
+    "pronunciation": "/əˈkaʊnt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Employees can set up a direct deposit into their bank account.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-032",
+    "word": "receipt",
+    "meaning": "영수증",
+    "pronunciation": "/rɪˈsiːt/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Please keep the receipt for your records in case a return is needed.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-033",
+    "word": "tax",
+    "meaning": "세금",
+    "pronunciation": "/tæks/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All businesses are required to file their tax returns by April 15.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-034",
+    "word": "currency",
+    "meaning": "통화",
+    "pronunciation": "/ˈkʌrənsi/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Fluctuations in foreign currency can affect international trade profits.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-035",
+    "word": "yield",
+    "meaning": "수익률",
+    "pronunciation": "/jiːld/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The bond's annual yield is expected to reach 4 percent by next quarter.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-036",
+    "word": "accrual",
+    "meaning": "발생액",
+    "pronunciation": "/əˈkruːəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Accrual accounting records revenue when it is earned, not when cash is received.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-037",
+    "word": "amortize",
+    "meaning": "분할 상환하다",
+    "pronunciation": "/ˈæmərtaɪz/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The cost of the software license will be amortized over three years.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-038",
+    "word": "ledger",
+    "meaning": "원장",
+    "pronunciation": "/ˈlɛdʒər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "All transactions must be accurately recorded in the general ledger.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-039",
+    "word": "solvent",
+    "meaning": "지급 능력이 있는",
+    "pronunciation": "/ˈsɒlvənt/",
+    "partOfSpeech": "adjective",
+    "exampleSentence": "Despite recent losses, the company remains financially solvent.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-040",
+    "word": "appraisal",
+    "meaning": "감정, 평가",
+    "pronunciation": "/əˈpreɪzəl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "A property appraisal is required before the bank can approve the mortgage.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-041",
+    "word": "premium",
+    "meaning": "보험료, 할증금",
+    "pronunciation": "/ˈpriːmiəm/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Insurance premiums have increased due to rising healthcare costs.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-042",
+    "word": "exemption",
+    "meaning": "면제",
+    "pronunciation": "/ɪɡˈzɛmpʃən/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Small businesses may qualify for a tax exemption under the new legislation.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-043",
+    "word": "shareholder",
+    "meaning": "주주",
+    "pronunciation": "/ˈʃɛərhoʊldər/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "Shareholders will vote on the proposed merger at the annual meeting.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-044",
+    "word": "payroll",
+    "meaning": "급여 대장",
+    "pronunciation": "/ˈpeɪroʊl/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The payroll department processes employee salaries on the 25th of each month.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-045",
+    "word": "insure",
+    "meaning": "보험에 들다",
+    "pronunciation": "/ɪnˈʃʊr/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "All company vehicles must be fully insured against theft and damage.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-046",
+    "word": "fluctuate",
+    "meaning": "변동하다",
+    "pronunciation": "/ˈflʌktʃueɪt/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Stock prices tend to fluctuate in response to quarterly earnings reports.",
+    "category": "finance",
+    "difficulty": "intermediate"
+  },
+  {
+    "id": "fin-047",
+    "word": "forecast",
+    "meaning": "예측",
+    "pronunciation": "/ˈfɔːrkæst/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "The financial forecast for the next quarter looks promising.",
+    "category": "finance",
+    "difficulty": "basic"
+  },
+  {
+    "id": "fin-048",
+    "word": "subsidize",
+    "meaning": "보조금을 주다",
+    "pronunciation": "/ˈsʌbsɪdaɪz/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "The government decided to subsidize the cost of public transportation.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-049",
+    "word": "accrue",
+    "meaning": "발생하다",
+    "pronunciation": "/əˈkruː/",
+    "partOfSpeech": "verb",
+    "exampleSentence": "Interest will accrue on the outstanding balance until the payment is received.",
+    "category": "finance",
+    "difficulty": "advanced"
+  },
+  {
+    "id": "fin-050",
+    "word": "remittance",
+    "meaning": "송금",
+    "pronunciation": "/rɪˈmɪtəns/",
+    "partOfSpeech": "noun",
+    "exampleSentence": "International remittance fees have been reduced under the new banking policy.",
+    "category": "finance",
+    "difficulty": "advanced"
+  }
+]
