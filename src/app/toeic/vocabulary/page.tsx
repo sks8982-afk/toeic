@@ -10,6 +10,8 @@ import { useLeitnerBox } from '@/features/vocabulary/hooks/useLeitnerBox';
 import { useVocabSession } from '@/features/vocabulary/hooks/useVocabSession';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
+import { useAuth } from '@/shared/providers/AuthProvider';
+import { logVocabStudy, updateDailySummary } from '@/shared/lib/activity-logger';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
 import type { VocabWord } from '@/types';
@@ -28,6 +30,7 @@ const ALL_WORDS: VocabWord[] = [
 
 export default function VocabularyPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const leitner = useLeitnerBox();
   const { addXP, lastXPGain } = useXP();
   const { recordStudy } = useStreak();
@@ -43,6 +46,8 @@ export default function VocabularyPage() {
       // Leitner Box에 등록 (신규 단어면 init)
       leitner.initWord(session.currentWord.id);
 
+      const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
+
       if (result === 'know') {
         leitner.promote(session.currentWord.id);
         addXP(XP_REWARDS.VOCAB_CORRECT);
@@ -52,10 +57,18 @@ export default function VocabularyPage() {
         leitner.keep(session.currentWord.id);
       }
 
+      const boxAfter = result === 'know' ? Math.min(boxBefore + 1, 5) : result === 'unknown' ? 1 : boxBefore;
+
+      // DB에 기록
+      if (user) {
+        logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, result, boxBefore, boxAfter);
+        updateDailySummary(user.id, session.phase === 'review' ? 'vocab_reviewed' : 'vocab_learned');
+      }
+
       recordStudy();
       session.nextWord();
     },
-    [session, leitner, addXP, recordStudy],
+    [session, leitner, addXP, recordStudy, user],
   );
 
   // 퀴즈 정답 처리
@@ -65,6 +78,8 @@ export default function VocabularyPage() {
 
       leitner.initWord(session.currentWord.id);
 
+      const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
+
       if (correct) {
         leitner.promote(session.currentWord.id);
         addXP(XP_REWARDS.VOCAB_CORRECT);
@@ -72,10 +87,14 @@ export default function VocabularyPage() {
         leitner.demote(session.currentWord.id);
       }
 
+      if (user) {
+        logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, correct ? 'quiz_correct' : 'quiz_wrong', boxBefore, correct ? Math.min(boxBefore + 1, 5) : 1);
+      }
+
       recordStudy();
       session.nextWord();
     },
-    [session, leitner, addXP, recordStudy],
+    [session, leitner, addXP, recordStudy, user],
   );
 
   return (

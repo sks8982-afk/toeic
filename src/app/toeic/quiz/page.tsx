@@ -11,6 +11,8 @@ import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import { useToeicStats } from '@/features/toeic/hooks/useToeicStats';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
+import { useAuth } from '@/shared/providers/AuthProvider';
+import { logToeicQuiz, updateDailySummary } from '@/shared/lib/activity-logger';
 import { XPPopup } from '@/features/gamification/components';
 import { LevelUpModal } from '@/features/gamification/components';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
@@ -28,6 +30,7 @@ function QuizContent() {
   const { recordAnswer } = useToeicStats();
   const { addXP, lastXPGain, showLevelUp, level, dismissLevelUp } = useXP();
   const { recordStudy } = useStreak();
+  const { user } = useAuth();
 
   // 문제 로드
   useEffect(() => {
@@ -62,7 +65,22 @@ function QuizContent() {
     } else {
       addWrongAnswer(quiz.currentQuestion);
     }
-  }, [quiz.currentQuestion, quiz.isCorrect, recordAnswer, recordStudy, addXP, addWrongAnswer]);
+
+    // DB에 기록
+    if (user) {
+      logToeicQuiz(
+        user.id,
+        quiz.currentQuestion.type,
+        quiz.currentQuestion.difficulty,
+        quiz.currentQuestion,
+        quiz.selectedAnswer ?? 0,
+        quiz.currentQuestion.correctIndex,
+        quiz.isCorrect,
+      );
+      updateDailySummary(user.id, 'toeic_solved');
+      if (quiz.isCorrect) updateDailySummary(user.id, 'toeic_correct');
+    }
+  }, [quiz.currentQuestion, quiz.isCorrect, quiz.selectedAnswer, recordAnswer, recordStudy, addXP, addWrongAnswer, user]);
 
   // 정답/오답 처리
   useEffect(() => {

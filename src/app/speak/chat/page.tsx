@@ -11,6 +11,8 @@ import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useProgress } from '@/shared/providers/ProgressProvider';
+import { useAuth } from '@/shared/providers/AuthProvider';
+import { logSpeakSession, updateDailySummary } from '@/shared/lib/activity-logger';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { getScenarioById, getRandomScenarioForLevel, type ScenarioWithIntro } from '@/features/speak/lib/scenarios';
 import type { OverallRating, SpeakLevel, ChatMessage } from '@/types';
@@ -97,6 +99,7 @@ function ChatContent() {
   const { addXP } = useXP();
   const { recordStudy } = useStreak();
   const { progress } = useProgress();
+  const { user: authUser } = useAuth();
   const showPronunciation = progress.settings.pronunciationFeedback;
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -203,7 +206,14 @@ function ChatContent() {
         </div>
         {messages.length > 0 && (
           <button
-            onClick={() => { resetChat(); setAiScenario(null); setRefreshKey(k => k + 1); }}
+            onClick={() => {
+              // 현재 대화를 DB에 저장 후 리셋
+              if (authUser && messages.length > 0) {
+                logSpeakSession(authUser.id, scenario?.id, scenario?.titleKo, level, messages);
+                updateDailySummary(authUser.id, 'speak_sessions');
+              }
+              resetChat(); setAiScenario(null); setRefreshKey(k => k + 1);
+            }}
             className="px-2.5 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg active:bg-red-100 font-medium"
           >
             새 대화

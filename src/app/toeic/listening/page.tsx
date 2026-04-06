@@ -8,6 +8,8 @@ import { useListeningQuiz } from '@/features/toeic/hooks/useListeningQuiz';
 import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
+import { useAuth } from '@/shared/providers/AuthProvider';
+import { logListeningQuiz, updateDailySummary } from '@/shared/lib/activity-logger';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
 import type { ListeningDifficulty } from '@/types';
@@ -51,6 +53,8 @@ export default function ListeningPage() {
     }
   }, [quiz.currentQuestion, isSpeaking, speak, stop]);
 
+  const { user } = useAuth();
+
   const handleSelectAnswer = useCallback((index: number) => {
     quiz.selectAnswer(index);
     recordStudy();
@@ -58,7 +62,21 @@ export default function ListeningPage() {
     if (isCorrect) {
       addXP(XP_REWARDS.TOEIC_CORRECT);
     }
-  }, [quiz, recordStudy, addXP]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // DB에 기록
+    if (user && quiz.currentQuestion) {
+      logListeningQuiz(
+        user.id,
+        quiz.currentQuestion.difficulty,
+        quiz.currentQuestion,
+        index,
+        quiz.currentQuestion.correctIndex,
+        isCorrect ?? false,
+      );
+      updateDailySummary(user.id, 'listening_solved');
+      if (isCorrect) updateDailySummary(user.id, 'listening_correct');
+    }
+  }, [quiz, recordStudy, addXP, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNext = useCallback(() => {
     setShowTranscript(false);
