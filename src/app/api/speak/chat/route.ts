@@ -40,33 +40,36 @@ export async function POST(request: Request) {
       ? `\nScenario: ${scenarioTitle ?? scenario}. Stay in character as the other person in this scenario.`
       : '\nThis is a free conversation. Talk about any topic the user brings up.';
 
+    // 마지막 사용자 메시지 추출 (피드백 대상)
+    const lastUserMsg = messages.filter(m => m.role === 'user').pop()?.text ?? '';
+
     const systemPrompt = `You are a friendly English conversation partner for a Korean learner.
 Level: ${levelDesc}${scenarioContext}
 
-Rules:
-- Respond naturally in English only (1-3 sentences max)
-- Match the complexity to the user's level
-- If the user makes a grammar mistake, respond naturally first
-- After your response, add a JSON block with feedback:
-{
-  "grammar_issues": [{"original": "wrong phrase", "corrected": "correct phrase", "explanation": "한국어로 설명"}],
-  "pronunciation_tips": [{"word": "difficult word", "tip": "한국어로 발음 팁. 예: '이 단어는 th 발음이 중요해요. 혀를 이 사이에 넣고 발음하세요.'"}],
-  "suggestions": ["More natural expression 1", "More natural expression 2"]
-}
-- pronunciation_tips: If the user's sentence contains words that Korean speakers commonly mispronounce (th, r/l, v/b, f/p, z sounds), provide Korean pronunciation tips
-- If no issues, return empty arrays
-- IMPORTANT: Always end with the JSON block on a new line after your conversational response`;
+RESPONSE FORMAT:
+1. First, write your conversational reply in English (1-3 sentences). Do NOT include any JSON, code blocks, or technical formatting in this part.
+2. Then on a NEW LINE, write ONLY a JSON object (no markdown, no \`\`\`):
+
+{"grammar_issues":[{"original":"user's wrong phrase","corrected":"correct version","explanation":"한국어 설명"}],"pronunciation_tips":[{"word":"word from user","tip":"한국어 발음 팁"}],"suggestions":["more natural way to say what THE USER said"]}
+
+CRITICAL RULES:
+- The feedback JSON must ONLY analyze the USER's LAST message: "${lastUserMsg}"
+- Do NOT analyze or give feedback on YOUR OWN response
+- grammar_issues: errors in the USER's sentence only
+- pronunciation_tips: words the USER used that Korean speakers find hard to pronounce
+- suggestions: better ways the USER could have expressed their message
+- If the user's message has no issues, use empty arrays: {"grammar_issues":[],"pronunciation_tips":[],"suggestions":[]}
+- NEVER put JSON inside your conversational reply`;
 
     const conversationHistory = messages
       .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text}`)
       .join('\n');
 
-    const prompt = `${systemPrompt}\n\nConversation so far:\n${conversationHistory}\n\nRespond as AI:`;
+    const prompt = `${systemPrompt}\n\nConversation:\n${conversationHistory}\n\nYour reply:`;
 
     const rawResponse = await generateContent(prompt);
 
     // AI 응답에서 텍스트와 피드백 JSON 분리
-    const jsonMatch = rawResponse.match(/\{[\s\S]*"grammar_issues"[\s\S]*\}/);
     let text = rawResponse;
     let feedback = {
       grammar_issues: [] as Array<{ original: string; corrected: string; explanation: string }>,
@@ -74,14 +77,31 @@ Rules:
       suggestions: [] as string[],
     };
 
-    if (jsonMatch) {
-      text = rawResponse.slice(0, jsonMatch.index).trim();
-      try {
-        feedback = JSON.parse(jsonMatch[0]);
-      } catch {
-        // JSON 파싱 실패 시 피드백 없이 진행
+    // JSON 추출 시도 (여러 패턴)
+    const jsonPatterns = [
+      /\{[^{}]*"grammar_issues"\s*:\s*\[[\s\S]*?\]\s*,[\s\S]*?\}/,
+      /\{[\s\S]*?"grammar_issues"[\s\S]*?\}(?![\s\S]*\{)/,
+    ];
+
+    for (const pattern of jsonPatterns) {
+      const match = rawResponse.match(pattern);
+      if (match) {
+        text = rawResponse.slice(0, match.index).trim();
+        try {
+          feedback = JSON.parse(match[0]);
+          break;
+        } catch {
+          // 다음 패턴 시도
+        }
       }
     }
+
+    // 텍스트에서 남은 JSON/코드블록 잔여물 제거
+    text = text
+      .replace(/```[\w]*[\s\S]*?```/g, '')
+      .replace(/\{[\s\S]*?\}/g, '')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
 
     return NextResponse.json({
       text,

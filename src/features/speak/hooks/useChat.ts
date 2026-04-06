@@ -20,14 +20,24 @@ interface ChatState {
   readonly error: string | null;
 }
 
-// AI 응답에서 JSON 블록 제거 (텍스트만 추출)
+// AI 응답에서 JSON/코드 블록 제거 (대화 텍스트만 추출)
 function cleanAIResponse(text: string): string {
-  return text
-    .replace(/```json[\s\S]*?```/g, '')       // ```json ... ``` 블록 제거
-    .replace(/\{[\s\S]*"grammar_issues"[\s\S]*\}/g, '')  // JSON 객체 제거
-    .replace(/\{[\s\S]*"pronunciation_tips"[\s\S]*\}/g, '')
-    .replace(/```[\s\S]*?```/g, '')            // 기타 코드 블록 제거
-    .trim();
+  let cleaned = text;
+
+  // 1. ```json ... ``` 또는 ``` ... ``` 코드 블록 제거
+  cleaned = cleaned.replace(/```[\w]*[\s\S]*?```/g, '');
+
+  // 2. { 로 시작하는 JSON 객체 제거 (한 줄 또는 여러 줄)
+  cleaned = cleaned.replace(/\{[^{}]*("grammar_issues"|"pronunciation_tips"|"suggestions"|"grammar"|"original"|"corrected")[^{}]*\}/g, '');
+
+  // 3. 남은 중괄호 JSON 블록 제거 (여러 줄)
+  cleaned = cleaned.replace(/\{[\s\S]*?"grammar_issues"[\s\S]*?\}/g, '');
+  cleaned = cleaned.replace(/\{[\s\S]*?"pronunciation_tips"[\s\S]*?\}/g, '');
+
+  // 4. 빈 줄 정리
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n').trim();
+
+  return cleaned;
 }
 
 export function useChat(level: number, scenarioId?: string, scenarioTitle?: string) {

@@ -22,17 +22,44 @@ function ChatContent() {
   const scenarioId = searchParams.get('scenario') ?? undefined;
   const isAuto = searchParams.get('auto') === 'true';
 
-  // 시나리오 결정: 직접 선택 or AI 생성
+  // 시나리오 결정: 직접 선택 or 저장된 대화 복원 or AI 생성
   const presetScenario = scenarioId ? getScenarioById(scenarioId) : undefined;
   const [aiScenario, setAiScenario] = useState<ScenarioWithIntro | null>(null);
-  const [scenarioLoading, setScenarioLoading] = useState(isAuto);
+  const [scenarioLoading, setScenarioLoading] = useState(false);
 
   const scenario = presetScenario ?? aiScenario;
 
-  // auto 모드: Gemini로 시나리오 동적 생성
+  // auto 모드: 저장된 대화가 있으면 복원, 없으면 AI 생성
   useEffect(() => {
     if (!isAuto || presetScenario) return;
 
+    // 1) 저장된 대화 확인
+    try {
+      const saved = localStorage.getItem('speak-current-chat');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const isExpired = Date.now() - parsed.savedAt > 24 * 60 * 60 * 1000;
+        if (!isExpired && parsed.messages?.length > 0 && parsed.level === level) {
+          // 저장된 시나리오 정보 복원
+          if (parsed.scenarioId && parsed.scenarioTitle) {
+            setAiScenario({
+              id: parsed.scenarioId,
+              title: parsed.scenarioTitle,
+              titleKo: parsed.scenarioTitle,
+              description: '',
+              minLevel: level,
+              maxLevel: level,
+              missions: [],
+              keyExpressions: [],
+              introKo: '',
+            } as ScenarioWithIntro);
+          }
+          return; // 저장된 대화 있으면 새 시나리오 생성 안 함
+        }
+      }
+    } catch {}
+
+    // 2) 저장된 대화 없으면 AI 시나리오 생성
     setScenarioLoading(true);
     fetch('/api/speak/scenario', {
       method: 'POST',
@@ -48,7 +75,6 @@ function ChatContent() {
         } as ScenarioWithIntro);
       })
       .catch(() => {
-        // AI 실패 시 프리셋에서 폴백
         const fallback = getRandomScenarioForLevel(level);
         if (fallback) setAiScenario(fallback);
       })
