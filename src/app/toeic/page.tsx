@@ -104,6 +104,12 @@ export default function ToeicPage() {
           </Button>
         </Link>
 
+        <Link href="/toeic/listening">
+          <Button fullWidth size="lg" variant="secondary">
+            🎧 리스닝 문제풀기
+          </Button>
+        </Link>
+
         <Link href="/toeic/vocabulary">
           <Button fullWidth size="lg" variant="secondary">
             📚 단어 학습

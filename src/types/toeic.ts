@@ -31,6 +31,20 @@ export interface WrongAnswer {
   readonly interval: number;
 }
 
+// 리스닝 문제
+export type ListeningDifficulty = 'easy' | 'medium' | 'hard';
+
+export interface ListeningQuestion {
+  readonly id: string;
+  readonly difficulty: ListeningDifficulty;
+  readonly audioText: string;        // TTS로 읽을 영어 텍스트 (대화 or 문장)
+  readonly question: string;         // 질문 (한국어)
+  readonly options: readonly string[];  // 4지선다
+  readonly correctIndex: number;
+  readonly explanation: string;      // 해설 (한국어)
+  readonly transcript: string;       // 전체 스크립트 (정답 확인 후 표시)
+}
+
 export interface ToeicStats {
   readonly totalSolved: number;
   readonly correctRate: number;

@@ -202,9 +202,9 @@
   {
     "id": "biz-021",
     "word": "estimate",
-    "meaning": "견적, 추정",
-    "pronunciation": "/ˈɛstɪmət/",
-    "partOfSpeech": "noun",
+    "meaning": "견적, 추정 / 추정하다",
+    "pronunciation": "/ˈɛstɪmət/ (명) /ˈɛstɪmeɪt/ (동)",
+    "partOfSpeech": "noun, verb",
     "exampleSentence": "The contractor provided an estimate for the renovation project.",
     "category": "business",
     "difficulty": "basic"

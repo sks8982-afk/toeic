@@ -1,4 +1,4 @@
-export type { GrammarType, Difficulty, ToeicQuestion, WrongAnswer, ToeicStats } from './toeic';
+export type { GrammarType, Difficulty, ToeicQuestion, WrongAnswer, ToeicStats, ListeningDifficulty, ListeningQuestion } from './toeic';
 export type { VocabCategory, VocabDifficulty, LeitnerBox, VocabWord, VocabProgress } from './vocabulary';
 export { BOX_INTERVALS } from './vocabulary';
 export type { Accent, SpeakLevel, OverallRating, VoiceCharacter, Scenario, GrammarIssue, ChatFeedback, ChatMessage, SpeakStats } from './speak';

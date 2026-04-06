@@ -24,9 +24,13 @@ export function Flashcard({ word, onAssess }: FlashcardProps) {
           <div className="flex flex-col items-center justify-center h-full gap-3">
             <p className="text-3xl font-bold text-gray-900">{word.word}</p>
             <p className="text-sm text-gray-400">{word.pronunciation}</p>
-            <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">
-              {word.partOfSpeech}
-            </span>
+            <div className="flex flex-wrap gap-1 justify-center">
+              {word.partOfSpeech.split(/[,/]/).map((pos, i) => (
+                <span key={i} className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">
+                  {pos.trim()}
+                </span>
+              ))}
+            </div>
             <p className="text-xs text-gray-400 mt-4">탭하여 뜻 보기</p>
           </div>
         ) : (
