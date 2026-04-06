@@ -17,6 +17,29 @@ export async function syncProgressToSupabase(userId: string, xp: number, level: 
   return { error };
 }
 
+// Supabase에서 유저 진행 데이터 로드 (로그인 시)
+export async function loadProgressFromSupabase(userId: string): Promise<{
+  xp: number;
+  level: number;
+  streak: number;
+  lastStudyDate: string;
+} | null> {
+  const { data, error } = await supabase
+    .from('user_progress')
+    .select('xp, level, streak, last_study_date')
+    .eq('device_id', userId)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    xp: data.xp ?? 0,
+    level: data.level ?? 1,
+    streak: data.streak ?? 0,
+    lastStudyDate: data.last_study_date ?? '',
+  };
+}
+
 export interface RankingEntry {
   readonly rank: number;
   readonly deviceId: string;
