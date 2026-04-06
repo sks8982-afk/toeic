@@ -35,11 +35,11 @@ export function ChatBubble({ message, voiceName, onPlayAudio, isSpeaking }: Chat
 
         {/* AI 버블 하단: 재생 버튼 + 피드백 */}
         {isAI && (
-          <div className="flex items-center gap-2 mt-1 px-1">
+          <div className="flex items-center gap-2 mt-1.5">
             {onPlayAudio && (
               <button
                 onClick={onPlayAudio}
-                className="text-xs text-gray-400 hover:text-purple-600 transition-colors"
+                className="px-2.5 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-lg active:bg-gray-200 font-medium"
               >
                 {isSpeaking ? '⏹ 정지' : '🔊 듣기'}
               </button>

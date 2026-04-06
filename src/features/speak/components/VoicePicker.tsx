@@ -36,7 +36,10 @@ export function VoicePicker({ voices, selectedId, onSelect, onPreview }: VoicePi
       <Modal open={open} onClose={() => setOpen(false)} title="AI 음성 선택">
         <div className="space-y-2 mt-3 max-h-80 overflow-y-auto">
           {voices.length === 0 && (
-            <p className="text-sm text-gray-400 text-center py-4">사용 가능한 음성이 없습니다</p>
+            <div className="text-center py-4">
+              <p className="text-sm text-gray-400">이 기기에서는 음성 선택이 불가합니다</p>
+              <p className="text-xs text-gray-300 mt-1">기본 음성으로 자동 재생됩니다</p>
+            </div>
           )}
           {voices.map(voice => (
             <div

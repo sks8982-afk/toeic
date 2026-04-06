@@ -56,7 +56,7 @@ function ChatContent() {
   }, [isAuto, level, presetScenario]);
 
   const { messages, isLoading, error, sendMessage } = useChat(level, scenario?.id, scenario?.titleKo);
-  const { transcript, isListening, isSupported, error: sttError, stopListening, toggleListening } = useSpeechRecognition();
+  const { transcript, isListening, isSupported, error: sttError, autoEnded, stopListening, toggleListening, clearAutoEnded } = useSpeechRecognition();
   const { speak, stop, isSpeaking, availableVoices, selectedVoiceId, setSelectedVoiceId, previewVoice } = useTextToSpeech();
   const { addXP } = useXP();
   const { recordStudy } = useStreak();
@@ -88,6 +88,14 @@ function ChatContent() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages]);
+
+  // 음성 인식이 자동 종료되면 자동 전송 (모바일 대응)
+  useEffect(() => {
+    if (autoEnded && transcript.trim()) {
+      clearAutoEnded();
+      handleSendMessage(transcript.trim());
+    }
+  }, [autoEnded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 마이크 전송 핸들러 (버튼으로 수동 전송)
   const handleMicSend = useCallback(() => {
@@ -193,14 +201,14 @@ function ChatContent() {
                 <p className="font-semibold text-purple-700 mb-1">📌 {scenario?.titleKo}</p>
                 {introMessage.text}
               </div>
-              <div className="flex items-center gap-2 mt-1 px-1">
+              <div className="flex items-center gap-2 mt-2">
                 <button
-                  onClick={() => speak(introMessage.text)}
-                  className="text-xs text-purple-500 hover:text-purple-700"
+                  onClick={() => speak(introMessage.text, 'ko')}
+                  className="px-3 py-2 text-sm bg-purple-100 text-purple-700 rounded-lg active:bg-purple-200 font-medium"
                 >
-                  🔊 듣기
+                  🔊 안내 듣기
                 </button>
-                <p className="text-[10px] text-gray-400">마이크를 누르거나 영어로 입력해서 대화를 시작하세요!</p>
+                <p className="text-xs text-gray-400 flex-1">마이크를 누르거나 영어로 입력하세요</p>
               </div>
             </div>
           </div>

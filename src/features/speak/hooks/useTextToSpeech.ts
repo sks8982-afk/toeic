@@ -42,7 +42,6 @@ export function useTextToSpeech() {
 
       setAvailableVoices(english);
 
-      // 기본 선택: 첫 번째 여성 음성, 없으면 첫 번째
       if (!selectedVoiceId && english.length > 0) {
         const defaultFemale = english.find(v => v.gender === 'female');
         setSelectedVoiceId(defaultFemale?.id ?? english[0].id);
@@ -50,6 +49,8 @@ export function useTextToSpeech() {
     };
 
     loadVoices();
+    // 일부 브라우저/WebView에서 voiceschanged가 안 올 수 있으므로 500ms 후 재시도
+    setTimeout(loadVoices, 500);
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
