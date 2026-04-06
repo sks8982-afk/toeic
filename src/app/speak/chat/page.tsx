@@ -26,21 +26,43 @@ function ChatContent() {
   const presetScenario = scenarioId ? getScenarioById(scenarioId) : undefined;
   const [aiScenario, setAiScenario] = useState<ScenarioWithIntro | null>(null);
   const [scenarioLoading, setScenarioLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); // 새 대화 트리거
 
   const scenario = presetScenario ?? aiScenario;
+
+  // 새 시나리오 생성 함수
+  const generateNewScenario = useCallback(() => {
+    setScenarioLoading(true);
+    setAiScenario(null);
+    fetch('/api/speak/scenario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ level }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        setAiScenario({ ...data } as ScenarioWithIntro);
+      })
+      .catch(() => {
+        const fallback = getRandomScenarioForLevel(level);
+        if (fallback) setAiScenario(fallback);
+      })
+      .finally(() => setScenarioLoading(false));
+  }, [level]);
 
   // auto 모드: 저장된 대화가 있으면 복원, 없으면 AI 생성
   useEffect(() => {
     if (!isAuto || presetScenario) return;
+    if (refreshKey > 0) return; // 새 대화 시에는 아래 useEffect에서 처리
 
-    // 1) 저장된 대화 확인
+    // 저장된 대화 확인
     try {
       const saved = localStorage.getItem('speak-current-chat');
       if (saved) {
         const parsed = JSON.parse(saved);
         const isExpired = Date.now() - parsed.savedAt > 24 * 60 * 60 * 1000;
         if (!isExpired && parsed.messages?.length > 0 && parsed.level === level) {
-          // 저장된 시나리오 정보 복원
           if (parsed.scenarioId && parsed.scenarioTitle) {
             setAiScenario({
               id: parsed.scenarioId,
@@ -54,32 +76,20 @@ function ChatContent() {
               introKo: '',
             } as ScenarioWithIntro);
           }
-          return; // 저장된 대화 있으면 새 시나리오 생성 안 함
+          return;
         }
       }
     } catch {}
 
-    // 2) 저장된 대화 없으면 AI 시나리오 생성
-    setScenarioLoading(true);
-    fetch('/api/speak/scenario', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ level }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) throw new Error(data.error);
-        setAiScenario({
-          ...data,
-          introKo: data.introKo,
-        } as ScenarioWithIntro);
-      })
-      .catch(() => {
-        const fallback = getRandomScenarioForLevel(level);
-        if (fallback) setAiScenario(fallback);
-      })
-      .finally(() => setScenarioLoading(false));
-  }, [isAuto, level, presetScenario]);
+    // 저장된 대화 없으면 새 시나리오 생성
+    generateNewScenario();
+  }, [isAuto, level, presetScenario]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // "새 대화" 클릭 시 새 시나리오 생성
+  useEffect(() => {
+    if (refreshKey === 0) return;
+    generateNewScenario();
+  }, [refreshKey, generateNewScenario]);
 
   const { messages, isLoading, error, sendMessage, resetChat } = useChat(level, scenario?.id, scenario?.titleKo);
   const { transcript, isListening, isSupported, error: sttError, autoEnded, stopListening, toggleListening, clearAutoEnded } = useSpeechRecognition();
@@ -91,6 +101,7 @@ function ChatContent() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastRating = useRef<OverallRating | null>(null);
+  const lastInputWasVoice = useRef(false); // 음성 vs 텍스트 구분
 
   // 시나리오 안내 메시지 (한국어로 상황 설명)
   const introMessage = useMemo<ChatMessage | null>(() => {
@@ -119,6 +130,7 @@ function ChatContent() {
   useEffect(() => {
     if (autoEnded && transcript.trim()) {
       clearAutoEnded();
+      lastInputWasVoice.current = true;
       handleSendMessage(transcript.trim());
     }
   }, [autoEnded]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -127,13 +139,25 @@ function ChatContent() {
   const handleMicSend = useCallback(() => {
     if (transcript.trim()) {
       stopListening();
+      lastInputWasVoice.current = true;
       handleSendMessage(transcript.trim());
     }
   }, [transcript, stopListening]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // 음성 입력이었던 AI 메시지 ID 추적
+  const voiceInputMsgIds = useRef(new Set<string>());
+
   const handleSendMessage = useCallback(async (text: string) => {
+    const wasVoice = lastInputWasVoice.current;
+    lastInputWasVoice.current = false; // 리셋
+
     const aiMsg = await sendMessage(text);
     recordStudy();
+
+    // 음성 입력이었으면 해당 AI 메시지 ID 기록
+    if (wasVoice && aiMsg) {
+      voiceInputMsgIds.current.add(aiMsg.id);
+    }
 
     if (aiMsg) {
       // TTS 재생
@@ -179,7 +203,7 @@ function ChatContent() {
         </div>
         {messages.length > 0 && (
           <button
-            onClick={() => { resetChat(); router.push(`/speak/chat?level=${level}&auto=true`); }}
+            onClick={() => { resetChat(); setAiScenario(null); setRefreshKey(k => k + 1); }}
             className="px-2.5 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg active:bg-red-100 font-medium"
           >
             새 대화
@@ -264,7 +288,10 @@ function ChatContent() {
               isSpeaking={isSpeaking}
             />
             {msg.role === 'ai' && msg.feedback && (
-              <FeedbackCard feedback={msg.feedback} showPronunciation={showPronunciation} />
+              <FeedbackCard
+                feedback={msg.feedback}
+                showPronunciation={showPronunciation && voiceInputMsgIds.current.has(msg.id)}
+              />
             )}
           </div>
         ))}
