@@ -2,7 +2,7 @@
 // Plan SC: SC-08 — 학습 기록 저장 및 복원
 'use client';
 
-import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, ProgressBar } from '@/shared/components/ui';
 import { Flashcard, QuizMode, BoxProgress, SessionHeader } from '@/features/vocabulary/components';
@@ -12,6 +12,7 @@ import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useAuth } from '@/shared/providers/AuthProvider';
 import { logVocabStudy, updateDailySummary } from '@/shared/lib/activity-logger';
+import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import { supabase } from '@/shared/lib/supabase';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
@@ -24,20 +25,46 @@ import marketingWords from '@/data/vocabulary/marketing.json';
 import dailyWords from '@/data/vocabulary/daily.json';
 import travelWords from '@/data/vocabulary/travel.json';
 
-const ALL_WORDS: VocabWord[] = [
+const PRESET_WORDS: VocabWord[] = [
   ...businessWords, ...financeWords, ...hrWords,
   ...marketingWords, ...dailyWords, ...travelWords,
 ] as VocabWord[];
 
 export default function VocabularyPage() {
   const router = useRouter();
+  const [allWords, setAllWords] = useState<VocabWord[]>(PRESET_WORDS);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { user } = useAuth();
   const leitner = useLeitnerBox();
   const { addXP, lastXPGain } = useXP();
   const { recordStudy } = useStreak();
+  const { addWrongAnswer } = useWrongAnswers();
   const dailyTarget = 30;
 
-  const session = useVocabSession(leitner.allProgress, ALL_WORDS, dailyTarget);
+  const session = useVocabSession(leitner.allProgress, allWords, dailyTarget);
+
+  // 프리셋 단어를 다 학습했으면 AI로 새 단어 생성
+  useEffect(() => {
+    if (isGenerating) return;
+    const learnedIds = new Set(leitner.allProgress.map(p => p.wordId));
+    const remaining = allWords.filter(w => !learnedIds.has(w.id));
+    if (remaining.length < 10 && allWords.length > 0) {
+      setIsGenerating(true);
+      const learnedWords = leitner.allProgress.map(p => allWords.find(w => w.id === p.wordId)?.word).filter(Boolean).slice(-50);
+      fetch('/api/vocabulary/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ count: 20, excludeWords: learnedWords }),
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.words?.length > 0) {
+            setAllWords(prev => [...prev, ...data.words]);
+          }
+        })
+        .finally(() => setIsGenerating(false));
+    }
+  }, [leitner.allProgress.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 세션 내 정답/오답 카운터
   const sessionStats = useRef({ correct: 0, wrong: 0, total: 0 });
@@ -74,6 +101,17 @@ export default function VocabularyPage() {
         addXP(XP_REWARDS.VOCAB_CORRECT);
       } else if (result === 'unknown') {
         leitner.demote(session.currentWord.id);
+        // 오답노트에 추가
+        addWrongAnswer({
+          id: `vocab-${session.currentWord.id}`,
+          type: 'vocabulary' as const,
+          difficulty: session.currentWord.difficulty as 'easy' | 'medium' | 'hard',
+          sentence: `[단어] ${session.currentWord.word} — ${session.currentWord.meaning}`,
+          options: [session.currentWord.meaning, '다른 뜻1', '다른 뜻2', '다른 뜻3'],
+          correctIndex: 0,
+          explanation: `${session.currentWord.word} (${session.currentWord.partOfSpeech}): ${session.currentWord.meaning}\n예문: ${session.currentWord.exampleSentence}`,
+          grammarPoint: `단어 (${session.currentWord.category})`,
+        });
       } else {
         leitner.keep(session.currentWord.id);
       }
@@ -94,7 +132,7 @@ export default function VocabularyPage() {
       recordStudy();
       session.nextWord();
     },
-    [session, leitner, addXP, recordStudy, user],
+    [session, leitner, addXP, recordStudy, user, addWrongAnswer],
   );
 
   // 퀴즈 정답 처리
@@ -111,6 +149,16 @@ export default function VocabularyPage() {
         addXP(XP_REWARDS.VOCAB_CORRECT);
       } else {
         leitner.demote(session.currentWord.id);
+        addWrongAnswer({
+          id: `vocab-quiz-${session.currentWord.id}`,
+          type: 'vocabulary' as const,
+          difficulty: session.currentWord.difficulty as 'easy' | 'medium' | 'hard',
+          sentence: `[단어 퀴즈] ${session.currentWord.word} — ${session.currentWord.meaning}`,
+          options: [session.currentWord.meaning, '다른 뜻1', '다른 뜻2', '다른 뜻3'],
+          correctIndex: 0,
+          explanation: `${session.currentWord.word} (${session.currentWord.partOfSpeech}): ${session.currentWord.meaning}\n예문: ${session.currentWord.exampleSentence}`,
+          grammarPoint: `단어 (${session.currentWord.category})`,
+        });
       }
 
       sessionStats.current.total++;
@@ -190,7 +238,7 @@ export default function VocabularyPage() {
           ) : (
             <QuizMode
               word={session.currentWord}
-              allWords={ALL_WORDS}
+              allWords={allWords}
               mode={session.quizType === 'fill-blank' ? 'fill-blank' : session.quizType === 'kr-to-en' ? 'kr-to-en' : 'en-to-kr'}
               onAnswer={handleQuizAnswer}
             />
