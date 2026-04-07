@@ -7,7 +7,13 @@ import { Card, Button } from '@/shared/components/ui';
 import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import type { WrongAnswer } from '@/types';
 
-type FilterTab = 'all' | 'due' | 'resolved';
+type FilterTab = 'all' | 'toeic' | 'listening' | 'vocab' | 'due';
+
+function getCategory(w: WrongAnswer): 'toeic' | 'listening' | 'vocab' {
+  if (w.question.sentence.startsWith('[리스닝]')) return 'listening';
+  if (w.question.sentence.startsWith('[단어]') || w.question.sentence.startsWith('[단어 퀴즈]')) return 'vocab';
+  return 'toeic';
+}
 
 export default function WrongNotesPage() {
   const router = useRouter();
@@ -15,11 +21,15 @@ export default function WrongNotesPage() {
   const [filter, setFilter] = useState<FilterTab>('all');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const filtered = filter === 'due'
-    ? dueReviews
-    : filter === 'resolved'
-      ? wrongAnswers.filter(w => w.reviewCount >= 3)
-      : wrongAnswers;
+  const toeicCount = wrongAnswers.filter(w => getCategory(w) === 'toeic').length;
+  const listeningCount = wrongAnswers.filter(w => getCategory(w) === 'listening').length;
+  const vocabCount = wrongAnswers.filter(w => getCategory(w) === 'vocab').length;
+
+  const filtered = filter === 'all'
+    ? wrongAnswers
+    : filter === 'due'
+      ? dueReviews
+      : wrongAnswers.filter(w => getCategory(w) === filter);
 
   return (
     <div className="space-y-5">
@@ -36,30 +46,34 @@ export default function WrongNotesPage() {
         <h1 className="text-xl font-bold text-gray-900">오답 노트</h1>
       </div>
 
-      {/* 통계 */}
-      <div className="grid grid-cols-3 gap-3">
+      {/* 종류별 통계 */}
+      <div className="grid grid-cols-4 gap-2">
         <div className="text-center p-3 bg-red-50 rounded-xl">
           <p className="text-xl font-bold text-red-600">{wrongAnswers.length}</p>
-          <p className="text-xs text-gray-500">총 오답</p>
+          <p className="text-[10px] text-gray-500">전체</p>
         </div>
-        <div className="text-center p-3 bg-orange-50 rounded-xl">
-          <p className="text-xl font-bold text-orange-600">{dueReviews.length}</p>
-          <p className="text-xs text-gray-500">오늘 복습</p>
+        <div className="text-center p-3 bg-blue-50 rounded-xl">
+          <p className="text-xl font-bold text-blue-600">{toeicCount}</p>
+          <p className="text-[10px] text-gray-500">TOEIC</p>
+        </div>
+        <div className="text-center p-3 bg-purple-50 rounded-xl">
+          <p className="text-xl font-bold text-purple-600">{listeningCount}</p>
+          <p className="text-[10px] text-gray-500">리스닝</p>
         </div>
         <div className="text-center p-3 bg-green-50 rounded-xl">
-          <p className="text-xl font-bold text-green-600">
-            {wrongAnswers.filter(w => w.reviewCount >= 3).length}
-          </p>
-          <p className="text-xs text-gray-500">복습 완료</p>
+          <p className="text-xl font-bold text-green-600">{vocabCount}</p>
+          <p className="text-[10px] text-gray-500">단어</p>
         </div>
       </div>
 
       {/* 필터 탭 */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 overflow-x-auto pb-1">
         {([
-          { key: 'all', label: '전체' },
-          { key: 'due', label: '오늘 복습' },
-          { key: 'resolved', label: '복습 3회+' },
+          { key: 'all', label: '전체', count: wrongAnswers.length },
+          { key: 'toeic', label: 'TOEIC', count: toeicCount },
+          { key: 'listening', label: '리스닝', count: listeningCount },
+          { key: 'vocab', label: '단어', count: vocabCount },
+          { key: 'due', label: '오늘 복습', count: dueReviews.length },
         ] as const).map(tab => (
           <button
             key={tab.key}
@@ -69,7 +83,7 @@ export default function WrongNotesPage() {
                 ? 'bg-blue-600 text-white'
                 : 'bg-white text-gray-600 border border-gray-200'}`}
           >
-            {tab.label}
+            {tab.label} {tab.count > 0 && <span className="ml-1 opacity-70">{tab.count}</span>}
           </button>
         ))}
       </div>
