@@ -1,24 +1,43 @@
-// 로그인 페이지
+// 로그인 페이지 — 아이디 저장 기능 포함
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Card } from '@/shared/components/ui';
 import { useAuth } from '@/shared/providers/AuthProvider';
+
+const SAVED_EMAIL_KEY = 'saved-login-email';
 
 export default function LoginPage() {
   const router = useRouter();
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [saveEmail, setSaveEmail] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // 저장된 이메일 불러오기
+  useEffect(() => {
+    const saved = localStorage.getItem(SAVED_EMAIL_KEY);
+    if (saved) {
+      setEmail(saved);
+      setSaveEmail(true);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
+
+    // 아이디 저장 처리
+    if (saveEmail) {
+      localStorage.setItem(SAVED_EMAIL_KEY, email);
+    } else {
+      localStorage.removeItem(SAVED_EMAIL_KEY);
+    }
 
     const result = await signIn(email, password);
     setIsLoading(false);
@@ -71,6 +90,17 @@ export default function LoginPage() {
                 placeholder="6자 이상"
               />
             </div>
+
+            {/* 아이디 저장 */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={saveEmail}
+                onChange={e => setSaveEmail(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-600">아이디 저장</span>
+            </label>
 
             {error && (
               <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">
