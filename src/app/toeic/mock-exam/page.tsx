@@ -49,13 +49,26 @@ export default function MockExamPage() {
   const [timer, setTimer] = useState(0);
   const [isLoadingList, setIsLoadingList] = useState(true);
 
-  // 모의고사 목록 로드
+  const [completedExamIds, setCompletedExamIds] = useState<Set<string>>(new Set());
+
+  // 모의고사 목록 + 응시 이력 로드
   useEffect(() => {
     fetch('/api/toeic/mock-exam')
       .then(res => res.json())
       .then(data => setExams(data.exams ?? []))
       .finally(() => setIsLoadingList(false));
-  }, []);
+
+    // 내 응시 이력
+    if (user) {
+      supabase
+        .from('mock_exam_results')
+        .select('exam_id')
+        .eq('user_id', user.id)
+        .then(({ data }) => {
+          if (data) setCompletedExamIds(new Set(data.map(r => r.exam_id)));
+        });
+    }
+  }, [user]);
 
   // 타이머
   useEffect(() => {
@@ -192,12 +205,10 @@ export default function MockExamPage() {
         {/* 새 모의고사 생성 */}
         <Card padding="lg">
           <h2 className="font-bold text-gray-900 mb-3">AI 모의고사 생성</h2>
-          <p className="text-sm text-gray-500 mb-4">AI가 리스닝 10문제 + 리딩 10문제를 만들어줍니다</p>
-          <div className="grid grid-cols-3 gap-2">
-            <Button onClick={() => handleGenerate('easy')} variant="secondary" fullWidth>기초</Button>
-            <Button onClick={() => handleGenerate('medium')} fullWidth>중급</Button>
-            <Button onClick={() => handleGenerate('hard')} variant="secondary" fullWidth>고급</Button>
-          </div>
+          <p className="text-sm text-gray-500 mb-4">실제 TOEIC과 유사한 리스닝 5문제 + 리딩 5문제 (약 20분)</p>
+          <Button onClick={() => handleGenerate('standard')} fullWidth size="lg">
+            새 모의고사 생성하기
+          </Button>
         </Card>
 
         {/* 기존 모의고사 목록 */}
@@ -209,19 +220,35 @@ export default function MockExamPage() {
             <p className="text-center text-gray-400 py-6 text-sm">아직 모의고사가 없습니다. 위에서 생성해보세요!</p>
           ) : (
             <div className="space-y-2">
-              {exams.map(exam => (
-                <Card key={exam.id} variant="interactive" padding="md" onClick={() => handleStartExam(exam.id)}>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-semibold text-gray-900 text-sm">{exam.title}</p>
-                      <p className="text-xs text-gray-500">{exam.description}</p>
-                    </div>
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </Card>
-              ))}
+              {/* 미응시 먼저 표시 */}
+              {exams
+                .sort((a, b) => {
+                  const aCompleted = completedExamIds.has(a.id);
+                  const bCompleted = completedExamIds.has(b.id);
+                  if (aCompleted !== bCompleted) return aCompleted ? 1 : -1;
+                  return 0;
+                })
+                .map(exam => {
+                  const isCompleted = completedExamIds.has(exam.id);
+                  return (
+                    <Card key={exam.id} variant="interactive" padding="md" onClick={() => handleStartExam(exam.id)}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className={`font-semibold text-sm ${isCompleted ? 'text-gray-400' : 'text-gray-900'}`}>{exam.title}</p>
+                            {isCompleted && (
+                              <span className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full">응시완료</span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-500">{exam.description}</p>
+                        </div>
+                        <span className="text-xs text-blue-600 font-medium shrink-0">
+                          {isCompleted ? '다시 풀기' : '응시하기'}
+                        </span>
+                      </div>
+                    </Card>
+                  );
+                })}
             </div>
           )}
         </div>
