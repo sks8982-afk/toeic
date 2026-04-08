@@ -11,18 +11,32 @@ const requestSchema = z.object({
 const PART_PROMPTS: Record<string, (count: number) => string> = {
   part3: (count) => `Generate ${count} TOEIC Part 3 Listening questions (conversations).
 
-Each question is based on a LONG two-person conversation.
-EACH conversation MUST have at least 10-14 lines alternating between (Man) and (Woman).
-Topics: office meeting, phone call, store/restaurant service, travel, appointment booking.
-Include names, dates, times, prices, locations for realistic details.
+EACH conversation MUST:
+- Have 10-14 lines alternating between two speakers
+- Use different character names and scenarios for EACH question (NO repeating names!)
+- Start naturally — NOT with greetings like "Hi Sarah" every time
+- Start mid-conversation or with a question/statement instead
+
+VARIETY RULES (each question must use a DIFFERENT combination):
+Scenarios (pick different ones): phone inquiry, office discussion, appointment change, delivery issue, project update, complaint handling, event planning, schedule conflict, training session, equipment problem
+Speaker names (pick different ones): David/Jennifer, Mark/Lisa, Tom/Amanda, Chris/Michelle, Robert/Emily, Kevin/Rachel, Brian/Nicole, Steve/Angela, Paul/Catherine, Alex/Diana
+
+Starting examples (vary these — NEVER start the same way twice):
+- "(Man) I just got an email about the quarterly review..."
+- "(Woman) Excuse me, I was wondering if you could help me with..."
+- "(Man) Have you had a chance to look at the new proposal?"
+- "(Woman) I'm calling about the order I placed last week."
+- "(Man) We need to discuss the budget changes before Friday."
+
+Include specific details: names, dates, times, prices, locations.
 
 Return ONLY valid JSON array:
 [{
-  "audioText": "(Woman) ... (Man) ... [MUST be 10+ lines of natural dialogue]",
+  "audioText": "(Woman) ... (Man) ... [10+ lines, varied start, NO repeated names]",
   "question": "한국어 질문 (구체적: 누가/무엇을/왜/언제)",
   "options": ["한국어 선택지1", "선택지2", "선택지3", "선택지4"],
   "correctIndex": 0,
-  "explanation": "한국어 해설 (음성의 어떤 부분이 단서인지 인용)",
+  "explanation": "한국어 해설",
   "part": "listening"
 }]`,
 

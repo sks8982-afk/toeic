@@ -25,26 +25,36 @@ export async function POST(request: Request) {
     const { difficulty } = parsed.data;
     const guide = DIFFICULTY_GUIDE[difficulty];
 
+    // 매번 다른 시나리오를 위한 랜덤 시드
+    const scenarios = ['office meeting', 'phone inquiry', 'restaurant reservation', 'hotel check-in', 'delivery problem', 'job interview', 'travel agency', 'medical appointment', 'car repair shop', 'library service', 'gym membership', 'bank inquiry', 'real estate tour', 'conference registration', 'tech support call'];
+    const names = [['David','Jennifer'], ['Mark','Lisa'], ['Tom','Amanda'], ['Chris','Michelle'], ['Robert','Emily'], ['Kevin','Rachel'], ['Brian','Nicole'], ['Steve','Angela']];
+    const picked = scenarios[Math.floor(Math.random() * scenarios.length)];
+    const pickedNames = names[Math.floor(Math.random() * names.length)];
+
     const prompt = `Generate a TOEIC Listening Comprehension question.
 
 Difficulty: ${difficulty} — ${guide}
+Scenario: ${picked}
+Character names: ${pickedNames[0]} (Man) and ${pickedNames[1]} (Woman)
 
-Create a realistic TOEIC-style listening question. Return ONLY valid JSON (no markdown):
+IMPORTANT: Do NOT start with "Hi [name]" greeting. Start naturally mid-conversation or with a question/statement.
+Good starts: "I just received...", "Have you seen...", "Excuse me, I was wondering...", "We need to talk about..."
+
+Return ONLY valid JSON (no markdown):
 {
-  "audioText": "The English text to be read aloud by TTS. For conversations, use format: (Man) Hello... (Woman) Hi...",
-  "question": "한국어로 된 질문. 예: 남자는 왜 전화했습니까?",
-  "options": ["선택지1 (한국어)", "선택지2", "선택지3", "선택지4"],
+  "audioText": "Full English dialogue with (Man) and (Woman) tags. Min 8-10 lines for medium/hard.",
+  "question": "한국어 질문 (구체적)",
+  "options": ["한국어 선택지1", "선택지2", "선택지3", "선택지4"],
   "correctIndex": 0,
-  "explanation": "한국어 해설. 왜 이 답이 맞는지 설명.",
-  "transcript": "Full English transcript for review after answering"
+  "explanation": "한국어 해설",
+  "transcript": "Full English transcript"
 }
 
 Rules:
-- audioText: natural English, realistic TOEIC scenario (office, store, airport, etc.)
+- audioText: natural English, use the scenario and names above
 - question and options: in Korean
-- Make the wrong options plausible but clearly wrong if you understood the audio
-- For easy: single announcement or message
-- For medium: 2-person short dialogue
+- For easy: single announcement or message (3-4 sentences)
+- For medium: 2-person dialogue (8-10 lines)
 - For hard: longer dialogue with details to catch`;
 
     const rawResponse = await generateContent(prompt);
