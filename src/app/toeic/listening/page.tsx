@@ -1,11 +1,10 @@
 // TOEIC 리스닝 문제풀이 — AI 생성 + TTS + 프리페치 + 저장/이어풀기
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, ProgressBar, LoadingSkeleton } from '@/shared/components/ui';
 import { useListeningQuiz } from '@/features/toeic/hooks/useListeningQuiz';
-import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useAuth } from '@/shared/providers/AuthProvider';
@@ -24,10 +23,38 @@ const DIFF_LABELS: Record<ListeningDifficulty, { label: string; color: string }>
 export default function ListeningPage() {
   const router = useRouter();
   const quiz = useListeningQuiz();
-  const { speak, stop, isSpeaking } = useTextToSpeech();
   const { addXP, lastXPGain } = useXP();
   const { recordStudy } = useStreak();
   const [showTranscript, setShowTranscript] = useState(false);
+
+  // 서버 TTS (긴 리스닝 텍스트 안정 재생)
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const speak = useCallback(async (text: string) => {
+    try {
+      setIsSpeaking(true);
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      const res = await fetch('/api/speak/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, lang: 'en' }),
+      });
+      if (!res.ok) { setIsSpeaking(false); return; }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      await audio.play();
+    } catch { setIsSpeaking(false); }
+  }, []);
+
+  const stop = useCallback(() => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    setIsSpeaking(false);
+  }, []);
   const [showDiffPicker, setShowDiffPicker] = useState(false);
   const [pendingDiff, setPendingDiff] = useState<ListeningDifficulty | null>(null);
 
@@ -50,7 +77,7 @@ export default function ListeningPage() {
     if (isSpeaking) {
       stop();
     } else {
-      speak(quiz.currentQuestion.audioText, 'en');
+      speak(quiz.currentQuestion.audioText);
     }
   }, [quiz.currentQuestion, isSpeaking, speak, stop]);
 

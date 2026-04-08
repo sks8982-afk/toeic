@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const requestSchema = z.object({
-  text: z.string().max(500),
+  text: z.string().max(5000),
   lang: z.enum(['en', 'ko']).optional().default('en'),
 });
 

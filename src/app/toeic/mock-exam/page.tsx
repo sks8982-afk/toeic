@@ -1,12 +1,11 @@
 // TOEIC 모의고사 — 시험 목록 + 생성 + 응시
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Button, LoadingSkeleton } from '@/shared/components/ui';
 import { useAuth } from '@/shared/providers/AuthProvider';
 import { supabase } from '@/shared/lib/supabase';
-import { useTextToSpeech } from '@/features/speak/hooks/useTextToSpeech';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 
@@ -37,13 +36,43 @@ type ExamPhase = 'list' | 'generating' | 'listening' | 'reading' | 'result';
 export default function MockExamPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const { speak, stop, isSpeaking } = useTextToSpeech();
   const { addXP } = useXP();
 
   const [phase, setPhase] = useState<ExamPhase>('list');
   const [exams, setExams] = useState<MockExam[]>([]);
   const [currentExam, setCurrentExam] = useState<MockExam | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 서버 TTS (긴 텍스트 안정적 재생)
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const speak = useCallback(async (text: string) => {
+    try {
+      setIsSpeaking(true);
+      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+
+      const res = await fetch('/api/speak/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, lang: 'en' }),
+      });
+      if (!res.ok) { setIsSpeaking(false); return; }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+      await audio.play();
+    } catch { setIsSpeaking(false); }
+  }, []);
+
+  const stop = useCallback(() => {
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    setIsSpeaking(false);
+  }, []);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [showAnswer, setShowAnswer] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -79,31 +108,65 @@ export default function MockExamPage() {
 
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
-  // 새 모의고사 생성
-  const handleGenerate = useCallback(async (difficulty: string) => {
-    setPhase('generating');
+  // 점진적 파트 생성 큐
+  const [generatedQuestions, setGeneratedQuestions] = useState<QuestionItem[]>([]);
+  const [genProgress, setGenProgress] = useState('');
+  const generatingRef = useRef(false);
+
+  // 파트별 문제 생성 함수
+  const generatePart = useCallback(async (part: string, count: number): Promise<QuestionItem[]> => {
     try {
-      const res = await fetch('/api/toeic/mock-exam', {
+      const res = await fetch('/api/toeic/mock-exam/part', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ difficulty, listeningCount: 10, readingCount: 10 }),
+        body: JSON.stringify({ part, count }),
       });
+      if (!res.ok) return [];
       const data = await res.json();
-      if (data.exam) {
-        setCurrentExam(data.exam);
-        setAnswers(new Array(data.exam.total_questions).fill(null));
-        setCurrentIndex(0);
-        setTimer(0);
-        setPhase('listening');
-      } else {
-        alert('모의고사 생성에 실패했습니다.');
-        setPhase('list');
-      }
-    } catch {
-      alert('오류가 발생했습니다.');
-      setPhase('list');
-    }
+      return data.questions ?? [];
+    } catch { return []; }
   }, []);
+
+  // 새 모의고사 — 점진적 생성 (Part 3부터 시작, 나머지 백그라운드)
+  const handleGenerate = useCallback(async () => {
+    setPhase('generating');
+    setGeneratedQuestions([]);
+    generatingRef.current = true;
+
+    // 실제 TOEIC 구성: Part3(13) + Part4(10) + Part5(30) + Part6(4) + Part7(15) = 72문제
+    const parts = [
+      { part: 'part3', count: 5, label: 'Part 3 대화 (리스닝)' },
+      { part: 'part4', count: 5, label: 'Part 4 설명문 (리스닝)' },
+      { part: 'part5', count: 10, label: 'Part 5 빈칸채우기 (리딩)' },
+      { part: 'part6', count: 3, label: 'Part 6 장문빈칸 (리딩)' },
+      { part: 'part7', count: 5, label: 'Part 7 독해 (리딩)' },
+    ];
+
+    // 첫 파트 먼저 생성 → 바로 시작
+    setGenProgress(parts[0].label + ' 생성 중...');
+    const firstBatch = await generatePart(parts[0].part, parts[0].count);
+    if (firstBatch.length === 0) {
+      alert('문제 생성에 실패했습니다.');
+      setPhase('list');
+      return;
+    }
+
+    setGeneratedQuestions(firstBatch);
+    setAnswers(new Array(100).fill(null)); // 넉넉하게
+    setCurrentIndex(0);
+    setTimer(0);
+    setPhase('listening');
+
+    // 나머지 파트 백그라운드 생성
+    for (let i = 1; i < parts.length; i++) {
+      if (!generatingRef.current) break;
+      setGenProgress(parts[i].label + ' 생성 중...');
+      const batch = await generatePart(parts[i].part, parts[i].count);
+      setGeneratedQuestions(prev => [...prev, ...batch]);
+    }
+    setGenProgress('');
+    generatingRef.current = false;
+  }, [generatePart]);
 
   // 기존 모의고사 시작
   const handleStartExam = useCallback(async (examId: string) => {
@@ -117,13 +180,13 @@ export default function MockExamPage() {
     }
   }, []);
 
-  // 현재 문제
+  // 현재 문제 (점진적 생성 or DB 로드)
   const allQuestions = currentExam
     ? [...currentExam.listening_questions, ...currentExam.reading_questions]
-    : [];
+    : generatedQuestions;
   const currentQ = allQuestions[currentIndex];
   const isListeningSection = currentQ?.part === 'listening';
-  const listeningCount = currentExam?.listening_questions.length ?? 0;
+  const listeningCount = allQuestions.filter(q => q.part === 'listening').length;
 
   // 정답 선택
   const handleSelect = (idx: number) => {
@@ -134,23 +197,35 @@ export default function MockExamPage() {
     setShowAnswer(true);
   };
 
-  // 다음 문제
+  // 다음 문제 (점진적 생성 대기 포함)
   const handleNext = () => {
     setShowAnswer(false);
     stop();
 
+    const nextIdx = currentIndex + 1;
+
     // 리스닝 → 리딩 전환
-    if (currentIndex === listeningCount - 1 && phase === 'listening') {
+    if (phase === 'listening' && nextIdx < allQuestions.length && allQuestions[nextIdx]?.part === 'reading') {
       setPhase('reading');
     }
 
-    if (currentIndex < allQuestions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    if (nextIdx < allQuestions.length) {
+      setCurrentIndex(nextIdx);
+    } else if (generatingRef.current) {
+      // 아직 생성 중 → 잠시 대기
+      setGenProgress('다음 문제 생성 대기 중...');
     } else {
-      // 시험 종료 → 결과
       handleFinish();
     }
   };
+
+  // 생성 완료 시 대기 중인 다음 문제로 자동 진행
+  useEffect(() => {
+    if (genProgress === '다음 문제 생성 대기 중...' && currentIndex + 1 < allQuestions.length) {
+      setGenProgress('');
+      setCurrentIndex(currentIndex + 1);
+    }
+  }, [allQuestions.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 시험 완료
   const handleFinish = async () => {
@@ -206,7 +281,7 @@ export default function MockExamPage() {
         <Card padding="lg">
           <h2 className="font-bold text-gray-900 mb-3">AI 모의고사 생성</h2>
           <p className="text-sm text-gray-500 mb-4">실제 TOEIC과 유사한 리스닝 5문제 + 리딩 5문제 (약 20분)</p>
-          <Button onClick={() => handleGenerate('standard')} fullWidth size="lg">
+          <Button onClick={() => handleGenerate()} fullWidth size="lg">
             새 모의고사 생성하기
           </Button>
         </Card>
@@ -317,6 +392,17 @@ export default function MockExamPage() {
     );
   }
 
+  // === 문제 대기 중 ===
+  if (!currentQ && genProgress) {
+    return (
+      <div className="max-w-lg mx-auto px-4 py-12 text-center">
+        <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="font-bold text-gray-900">{genProgress}</p>
+        <p className="text-sm text-gray-500 mt-1">{allQuestions.length}문제 생성 완료</p>
+      </div>
+    );
+  }
+
   // === 문제 풀기 화면 ===
   if (!currentQ) return <LoadingSkeleton lines={5} />;
 
@@ -330,7 +416,10 @@ export default function MockExamPage() {
           }`}>
             {isListeningSection ? '리스닝' : '리딩'}
           </span>
-          <span className="text-sm text-gray-500">{currentIndex + 1}/{allQuestions.length}</span>
+          <span className="text-sm text-gray-500">
+            {currentIndex + 1}/{allQuestions.length}
+            {generatingRef.current && <span className="text-blue-500 ml-1 text-xs">(생성중...)</span>}
+          </span>
         </div>
         <span className="text-sm font-mono font-bold text-gray-700">{formatTime(timer)}</span>
       </div>
@@ -339,7 +428,7 @@ export default function MockExamPage() {
       {isListeningSection && currentQ.audioText && (
         <Card padding="md" className="text-center">
           <button
-            onClick={() => isSpeaking ? stop() : speak(currentQ.audioText!, 'en')}
+            onClick={() => isSpeaking ? stop() : speak(currentQ.audioText!)}
             className={`w-16 h-16 rounded-full mx-auto flex items-center justify-center text-2xl transition-all ${
               isSpeaking ? 'bg-red-500 text-white scale-110' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'
             }`}
