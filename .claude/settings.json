@@ -42,7 +42,8 @@
       "Bash(npx @react-native-community/cli init ToeicApp)",
       "Bash(./gradlew assembleRelease)",
       "Bash(echo \"sdk.dir=C:\\\\\\\\\\\\\\\\Users\\\\\\\\\\\\\\\\jungm\\\\\\\\\\\\\\\\AppData\\\\\\\\\\\\\\\\Local\\\\\\\\\\\\\\\\Android\\\\\\\\\\\\\\\\Sdk\")",
-      "Bash(./gradlew assembleRelease --stacktrace)"
+      "Bash(./gradlew assembleRelease --stacktrace)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://texttospeech.googleapis.com/v1/text:synthesize?key=$\\(grep GEMINI_API_KEY c:/Users/jungm/Desktop/myprojects/toeic/.env)"
     ],
     "additionalDirectories": [
       "C:\\Users\\jungm\\Desktop\\myprojects\\toeic\\.claude\\agents",
