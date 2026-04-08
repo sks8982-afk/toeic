@@ -96,6 +96,20 @@ export default function ToeicPage() {
 
       {/* 시작 버튼 */}
       <div className="space-y-3">
+        {/* 모의고사 */}
+        <Link href="/toeic/mock-exam">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-blue-600 p-4 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">📋</span>
+              <div>
+                <p className="font-bold">TOEIC 모의고사</p>
+                <p className="text-xs text-indigo-100">리스닝 + 리딩 시험 모드</p>
+              </div>
+            </div>
+            <div className="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-white/10" />
+          </div>
+        </Link>
+
         <Link
           href={selectedType ? `/toeic/quiz?type=${selectedType}` : '/toeic/quiz'}
         >
