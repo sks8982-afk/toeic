@@ -2,6 +2,12 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { generateContent } from '@/shared/lib/gemini';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
 const requestSchema = z.object({
   count: z.number().int().min(5).max(30).default(10),
@@ -48,14 +54,47 @@ Rules:
 - exampleSentence must be realistic business/workplace context
 - Do NOT repeat any word from the exclude list`;
 
-    const rawResponse = await generateContent(prompt);
+    // DB에서 이미 존재하는 단어 목록 가져와서 exclude에 추가
+    const { data: existingWords } = await supabaseAdmin
+      .from('vocabulary_words')
+      .select('word');
+    const dbWords = (existingWords ?? []).map((r: { word: string }) => r.word.toLowerCase());
+    const allExclude = [...new Set([...excludeWords, ...dbWords])].slice(0, 300);
+
+    const promptWithExclude = prompt.replace(
+      excludeList ? `EXCLUDE these words (already learned): ${excludeList}` : '',
+      `EXCLUDE these words (already in DB): ${allExclude.join(', ')}`,
+    );
+
+    const rawResponse = await generateContent(promptWithExclude);
     const jsonMatch = rawResponse.match(/\[[\s\S]*\]/);
 
     if (!jsonMatch) {
       return NextResponse.json({ error: 'Failed to generate words' }, { status: 500 });
     }
 
-    const words = JSON.parse(jsonMatch[0]).map((w: Record<string, string>, i: number) => ({
+    const generatedWords = JSON.parse(jsonMatch[0]) as Record<string, string>[];
+
+    // DB 기준 중복 제거
+    const dbWordSet = new Set(dbWords);
+    const uniqueWords = generatedWords.filter(w => !dbWordSet.has(w.word.toLowerCase()));
+
+    // 새 단어를 DB에 저장 (다른 계정에서도 사용 가능)
+    if (uniqueWords.length > 0) {
+      await supabaseAdmin.from('vocabulary_words').insert(
+        uniqueWords.map(w => ({
+          word: w.word,
+          meaning: w.meaning,
+          pronunciation: w.pronunciation,
+          part_of_speech: w.partOfSpeech,
+          example_sentence: w.exampleSentence,
+          category: w.category || 'daily',
+          difficulty: w.difficulty || 'intermediate',
+        })),
+      );
+    }
+
+    const words = uniqueWords.map((w, i) => ({
       ...w,
       id: `ai-vocab-${Date.now()}-${i}`,
     }));

@@ -43,6 +43,12 @@ export default function VocabularyPage() {
 
   const session = useVocabSession(leitner.allProgress, allWords, dailyTarget);
 
+  // 전체 단어 스펠링 셋 (중복 방지용)
+  const allWordSpellings = useMemo(() =>
+    new Set(allWords.map(w => w.word.toLowerCase())),
+    [allWords],
+  );
+
   // 프리셋 단어를 다 학습했으면 AI로 새 단어 생성
   useEffect(() => {
     if (isGenerating) return;
@@ -50,16 +56,23 @@ export default function VocabularyPage() {
     const remaining = allWords.filter(w => !learnedIds.has(w.id));
     if (remaining.length < 10 && allWords.length > 0) {
       setIsGenerating(true);
-      const learnedWords = leitner.allProgress.map(p => allWords.find(w => w.id === p.wordId)?.word).filter(Boolean).slice(-50);
+      // 전체 단어 목록을 exclude (이미 본 것 + 프리셋 전체)
+      const allExclude = Array.from(allWordSpellings).slice(0, 200);
       fetch('/api/vocabulary/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: 20, excludeWords: learnedWords }),
+        body: JSON.stringify({ count: 20, excludeWords: allExclude }),
       })
         .then(res => res.json())
         .then(data => {
           if (data.words?.length > 0) {
-            setAllWords(prev => [...prev, ...data.words]);
+            // 스펠링 기준 중복 제거 후 추가
+            const newWords = data.words.filter(
+              (w: VocabWord) => !allWordSpellings.has(w.word.toLowerCase()),
+            );
+            if (newWords.length > 0) {
+              setAllWords(prev => [...prev, ...newWords]);
+            }
           }
         })
         .finally(() => setIsGenerating(false));
