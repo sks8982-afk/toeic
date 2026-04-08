@@ -7,7 +7,7 @@ const requestSchema = z.object({
   lang: z.enum(['en', 'ko']).optional().default('en'),
 });
 
-const API_KEY = process.env.GEMINI_API_KEY!;
+const API_KEY = process.env.GOOGLE_TTS_API_KEY ?? process.env.GEMINI_API_KEY!;
 const TTS_URL = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`;
 
 // Google Cloud TTS 호출
