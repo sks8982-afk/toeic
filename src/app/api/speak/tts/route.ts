@@ -26,41 +26,93 @@ async function fetchTTS(text: string, lang: string): Promise<ArrayBuffer | null>
 
 // 대화를 파트별로 분리: (Man)/(Woman) 태그 기준
 interface DialoguePart {
-  speaker: 'man' | 'woman' | 'narrator';
+  speaker: 'a' | 'b' | 'narrator';
   text: string;
 }
 
-function parseDialogue(text: string): DialoguePart[] {
-  // (Man) ... (Woman) ... 패턴 감지
-  const hasDialogue = /\((?:Man|Woman|man|woman)\)/i.test(text);
+// 화자 태그 패턴: (Man), (Woman), (Speaker 1), A:, B:, 이름: 등
+const SPEAKER_TAG = /\((?:Man|Woman|man|woman|Speaker\s*\d|Person\s*[A-Z]|[A-Z][a-z]+)\)|^(?:[A-Z][a-z]+)\s*:|^(?:Man|Woman|Speaker\s*[AB12])\s*:/gim;
 
-  if (!hasDialogue) {
-    // 일반 텍스트 (독백/안내문)
-    return [{ speaker: 'narrator', text }];
+function parseDialogue(text: string): DialoguePart[] {
+  // 1. 명시적 화자 태그가 있는 경우
+  const tagPattern = /(\((?:Man|Woman|man|woman|Speaker\s*\d|Person\s*[A-Z]|[A-Z][a-z]+)\))|((Man|Woman|Speaker\s*[AB12]|[A-Z][a-z]{1,15})\s*:)/gi;
+  const hasExplicitTags = tagPattern.test(text);
+
+  if (hasExplicitTags) {
+    return parseWithTags(text);
   }
 
-  const parts: DialoguePart[] = [];
-  // (Man) 또는 (Woman) 으로 분리
-  const segments = text.split(/(\((?:Man|Woman|man|woman)\))/i);
+  // 2. 태그 없지만 따옴표 대화가 있는 경우 ("..." 패턴)
+  const quotes = text.match(/"[^"]+"/g);
+  if (quotes && quotes.length >= 2) {
+    return parseWithQuotes(text);
+  }
 
-  let currentSpeaker: 'man' | 'woman' | 'narrator' = 'narrator';
+  // 3. 일반 텍스트
+  return [{ speaker: 'narrator', text }];
+}
+
+// 태그 기반 파싱 (Man/Woman, 이름:, Speaker 1: 등)
+function parseWithTags(text: string): DialoguePart[] {
+  const parts: DialoguePart[] = [];
+  // 모든 화자 태그로 분할
+  const splitPattern = /(\((?:Man|Woman|man|woman|Speaker\s*\d|Person\s*[A-Z]|[A-Z][a-z]+)\))|((Man|Woman|Speaker\s*[AB12]|[A-Z][a-z]{1,15})\s*:)/gi;
+  const segments = text.split(splitPattern).filter(Boolean);
+
+  const speakerMap = new Map<string, 'a' | 'b'>();
+  let nextVoice: 'a' | 'b' = 'a';
 
   for (const seg of segments) {
     const trimmed = seg.trim();
     if (!trimmed) continue;
 
-    if (/^\((?:Man|man)\)$/i.test(trimmed)) {
-      currentSpeaker = 'man';
-    } else if (/^\((?:Woman|woman)\)$/i.test(trimmed)) {
-      currentSpeaker = 'woman';
-    } else {
-      // 콜론이나 공백 제거
-      const cleaned = trimmed.replace(/^[:\s]+/, '').trim();
-      if (cleaned) {
-        parts.push({ speaker: currentSpeaker, text: cleaned });
+    // 화자 태그인지 확인
+    const isTag = /^\(.*\)$/.test(trimmed) || /^[A-Za-z\s]+:$/.test(trimmed);
+    if (isTag) {
+      const name = trimmed.replace(/[():]/g, '').trim().toLowerCase();
+      if (!speakerMap.has(name)) {
+        speakerMap.set(name, nextVoice);
+        nextVoice = nextVoice === 'a' ? 'b' : 'a';
       }
+      continue;
     }
+
+    // 대사 텍스트
+    const cleaned = trimmed.replace(/^[:\s]+/, '').trim();
+    if (!cleaned) continue;
+
+    // 마지막 태그의 화자
+    const lastTag = [...speakerMap.entries()].pop();
+    const speaker = lastTag ? lastTag[1] : (parts.length % 2 === 0 ? 'a' : 'b');
+    parts.push({ speaker, text: cleaned });
   }
+
+  return parts.length > 0 ? parts : [{ speaker: 'narrator', text }];
+}
+
+// 따옴표 대화 파싱 — 화자가 번갈아 바뀐다고 가정
+function parseWithQuotes(text: string): DialoguePart[] {
+  const parts: DialoguePart[] = [];
+  const pattern = /([^"]*)"([^"]+)"/g;
+  let match;
+  let voiceToggle: 'a' | 'b' = 'a';
+  let lastIndex = 0;
+
+  while ((match = pattern.exec(text)) !== null) {
+    // 따옴표 앞의 나레이션
+    const narration = match[1].trim();
+    if (narration) {
+      parts.push({ speaker: 'narrator', text: narration });
+    }
+    // 따옴표 안의 대사
+    parts.push({ speaker: voiceToggle, text: match[2] });
+    voiceToggle = voiceToggle === 'a' ? 'b' : 'a';
+    lastIndex = pattern.lastIndex;
+  }
+
+  // 남은 텍스트
+  const remaining = text.slice(lastIndex).trim();
+  if (remaining) parts.push({ speaker: 'narrator', text: remaining });
 
   return parts.length > 0 ? parts : [{ speaker: 'narrator', text }];
 }
@@ -83,10 +135,10 @@ export async function POST(request: Request) {
     const audioBuffers: ArrayBuffer[] = [];
 
     for (const part of parts) {
-      // Man: en-US, Woman: en-GB (다른 억양으로 구분)
+      // 화자 A: en-US (미국), 화자 B: en-GB (영국), 나레이터: 기본
       let voiceLang = tl;
-      if (part.speaker === 'man') voiceLang = 'en-US';
-      else if (part.speaker === 'woman') voiceLang = 'en-GB';
+      if (part.speaker === 'a') voiceLang = 'en-US';
+      else if (part.speaker === 'b') voiceLang = 'en-GB';
 
       const buffer = await fetchTTS(part.text, voiceLang);
       if (buffer) audioBuffers.push(buffer);
