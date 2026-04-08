@@ -1,4 +1,4 @@
-// TTS API — 남/여 음성 분리 (다중 TTS 소스)
+// TTS API — Google Cloud TTS (남/여 Neural2 음성 분리)
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -7,19 +7,49 @@ const requestSchema = z.object({
   lang: z.enum(['en', 'ko']).optional().default('en'),
 });
 
-// --- TTS 소스 1: Google Translate (기본) ---
-async function googleTranslateTTS(text: string, lang: string): Promise<ArrayBuffer | null> {
-  const chunks = splitText(text, 200);
+const API_KEY = process.env.GEMINI_API_KEY!;
+const TTS_URL = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`;
+
+// Google Cloud TTS 호출
+async function cloudTTS(text: string, voiceName: string, langCode: string, rate: number = 1.0): Promise<ArrayBuffer | null> {
+  // 5000바이트 제한이므로 분할
+  const chunks = splitText(text, 4500);
   const buffers: ArrayBuffer[] = [];
+
   for (const chunk of chunks) {
     try {
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=${lang}&client=tw-ob`;
-      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      if (res.ok) buffers.push(await res.arrayBuffer());
+      const res = await fetch(TTS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: { text: chunk },
+          voice: { languageCode: langCode, name: voiceName },
+          audioConfig: { audioEncoding: 'MP3', speakingRate: rate, pitch: 0 },
+        }),
+      });
+
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (!data.audioContent) continue;
+
+      const binary = atob(data.audioContent);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      buffers.push(bytes.buffer);
     } catch { /* skip */ }
   }
+
   return buffers.length > 0 ? combineBuffers(buffers) : null;
 }
+
+// 음성 설정
+const VOICES = {
+  male:      { name: 'en-US-Neural2-D', lang: 'en-US', rate: 0.95 },  // 남성 (깊은 목소리)
+  female:    { name: 'en-US-Neural2-F', lang: 'en-US', rate: 1.0 },   // 여성
+  narrator:  { name: 'en-US-Neural2-J', lang: 'en-US', rate: 0.95 },  // 나레이터
+  korean:    { name: 'ko-KR-Neural2-A', lang: 'ko-KR', rate: 1.0 },   // 한국어 여성
+  koreanM:   { name: 'ko-KR-Neural2-C', lang: 'ko-KR', rate: 1.0 },   // 한국어 남성
+} as const;
 
 // --- 화자 파싱 ---
 interface DialoguePart {
@@ -72,7 +102,6 @@ function parseWithTags(text: string): DialoguePart[] {
     parts.push({ speaker: info.voice, gender: info.gender, text: cleaned });
   }
 
-  // 두 화자 성별 보완
   const speakers = [...speakerMap.values()];
   if (speakers.length === 2) {
     if (speakers[0].gender === 'neutral' && speakers[1].gender === 'neutral') {
@@ -112,30 +141,28 @@ export async function POST(request: Request) {
 
     const { text, lang } = parsed.data;
 
+    // 한국어
     if (lang === 'ko') {
-      // 한국어는 단일 음성
-      const buffer = await googleTranslateTTS(text, 'ko');
+      const buffer = await cloudTTS(text, VOICES.korean.name, VOICES.korean.lang);
       if (!buffer) return NextResponse.json({ error: 'TTS failed' }, { status: 500 });
       return new NextResponse(buffer, { headers: { 'Content-Type': 'audio/mpeg' } });
     }
 
-    // 영어: 대화 파싱 → 화자별 다른 언어(억양)로 구분
+    // 영어: 대화 파싱 → 화자별 다른 Neural2 음성
     const parts = parseDialogue(text);
     const audioBuffers: ArrayBuffer[] = [];
 
     for (const part of parts) {
-      // 남성: en-AU (호주 — 낮고 굵은 느낌), 여성: en-US (미국 — 높은 느낌)
-      // 나레이터: en-GB (영국)
-      const voiceLang = part.gender === 'male' ? 'en-AU'
-        : part.gender === 'female' ? 'en-US'
-        : 'en-GB';
+      const voice = part.gender === 'male' ? VOICES.male
+        : part.gender === 'female' ? VOICES.female
+        : VOICES.narrator;
 
-      const buffer = await googleTranslateTTS(part.text, voiceLang);
+      const buffer = await cloudTTS(part.text, voice.name, voice.lang, voice.rate);
       if (buffer) audioBuffers.push(buffer);
 
       // 화자 전환 간격
       if (parts.length > 1 && part.speaker !== 'narrator') {
-        audioBuffers.push(createSilence(250));
+        audioBuffers.push(new ArrayBuffer(25)); // 짧은 간격
       }
     }
 
@@ -171,8 +198,4 @@ function combineBuffers(buffers: ArrayBuffer[]): ArrayBuffer {
   let offset = 0;
   for (const buf of buffers) { combined.set(new Uint8Array(buf), offset); offset += buf.byteLength; }
   return combined.buffer;
-}
-
-function createSilence(ms: number): ArrayBuffer {
-  return new ArrayBuffer(Math.floor(ms / 10));
 }
