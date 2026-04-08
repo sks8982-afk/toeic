@@ -330,7 +330,7 @@ export default function MockExamPage() {
         </Card>
       )}
 
-      {/* 리딩: 문장 */}
+      {/* 리딩: 지문 + 질문 */}
       {!isListeningSection && currentQ.sentence && (
         <Card padding="md">
           {currentQ.grammarPoint && (
@@ -338,7 +338,10 @@ export default function MockExamPage() {
               {currentQ.grammarPoint}
             </span>
           )}
-          <p className="text-base leading-relaxed text-gray-900">{currentQ.sentence}</p>
+          <p className="text-base leading-relaxed text-gray-900 whitespace-pre-line">{currentQ.sentence}</p>
+          {currentQ.question && (
+            <p className="font-semibold text-gray-800 mt-3 pt-3 border-t border-gray-200">{currentQ.question}</p>
+          )}
         </Card>
       )}
 
