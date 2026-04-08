@@ -12,7 +12,6 @@ const TTS_URL = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${AP
 
 // Google Cloud TTS 호출
 async function cloudTTS(text: string, voiceName: string, langCode: string, rate: number = 1.0): Promise<ArrayBuffer | null> {
-  // 5000바이트 제한이므로 분할
   const chunks = splitText(text, 4500);
   const buffers: ArrayBuffer[] = [];
 
@@ -39,6 +38,20 @@ async function cloudTTS(text: string, voiceName: string, langCode: string, rate:
     } catch { /* skip */ }
   }
 
+  return buffers.length > 0 ? combineBuffers(buffers) : null;
+}
+
+// Google Translate TTS (Cloud TTS 실패 시 폴백)
+async function translateTTS(text: string, lang: string): Promise<ArrayBuffer | null> {
+  const chunks = splitText(text, 200);
+  const buffers: ArrayBuffer[] = [];
+  for (const chunk of chunks) {
+    try {
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(chunk)}&tl=${lang}&client=tw-ob`;
+      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+      if (res.ok) buffers.push(await res.arrayBuffer());
+    } catch { /* skip */ }
+  }
   return buffers.length > 0 ? combineBuffers(buffers) : null;
 }
 
@@ -143,7 +156,8 @@ export async function POST(request: Request) {
 
     // 한국어
     if (lang === 'ko') {
-      const buffer = await cloudTTS(text, VOICES.korean.name, VOICES.korean.lang);
+      let buffer = await cloudTTS(text, VOICES.korean.name, VOICES.korean.lang);
+      if (!buffer) buffer = await translateTTS(text, 'ko'); // 폴백
       if (!buffer) return NextResponse.json({ error: 'TTS failed' }, { status: 500 });
       return new NextResponse(buffer, { headers: { 'Content-Type': 'audio/mpeg' } });
     }
@@ -157,16 +171,27 @@ export async function POST(request: Request) {
         : part.gender === 'female' ? VOICES.female
         : VOICES.narrator;
 
-      const buffer = await cloudTTS(part.text, voice.name, voice.lang, voice.rate);
+      // Cloud TTS 시도 → 실패 시 Translate TTS 폴백
+      let buffer = await cloudTTS(part.text, voice.name, voice.lang, voice.rate);
+      if (!buffer) {
+        // 폴백: 남성=en-AU, 여성=en-US, 나레이터=en-GB (억양 차이로 구분)
+        const fallbackLang = part.gender === 'male' ? 'en-AU' : part.gender === 'female' ? 'en-US' : 'en-GB';
+        buffer = await translateTTS(part.text, fallbackLang);
+      }
       if (buffer) audioBuffers.push(buffer);
 
       // 화자 전환 간격
       if (parts.length > 1 && part.speaker !== 'narrator') {
-        audioBuffers.push(new ArrayBuffer(25)); // 짧은 간격
+        audioBuffers.push(new ArrayBuffer(25));
       }
     }
 
     if (audioBuffers.length === 0) {
+      // 최종 폴백: 전체 텍스트를 한번에
+      const fallback = await translateTTS(text, 'en');
+      if (fallback) {
+        return new NextResponse(fallback, { headers: { 'Content-Type': 'audio/mpeg' } });
+      }
       return NextResponse.json({ error: 'TTS failed' }, { status: 500 });
     }
 
