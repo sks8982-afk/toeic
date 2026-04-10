@@ -1,8 +1,18 @@
 // AI 단어 생성 API — 기존 단어를 다 학습하면 새 단어 생성
 import { NextResponse } from 'next/server';
+import { createHash } from 'crypto';
 import { z } from 'zod';
 import { generateContent } from '@/shared/lib/gemini';
 import { createClient } from '@supabase/supabase-js';
+
+/** 단어 내용 기반의 안정 ID (같은 단어=같은 ID) */
+function wordId(word: string, meaning: string): string {
+  const hash = createHash('sha256')
+    .update(`${word.trim().toLowerCase()}|${meaning.trim()}`)
+    .digest('hex')
+    .slice(0, 12);
+  return `ai-vocab-${hash}`;
+}
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -94,9 +104,9 @@ Rules:
       );
     }
 
-    const words = uniqueWords.map((w, i) => ({
+    const words = uniqueWords.map((w) => ({
       ...w,
-      id: `ai-vocab-${Date.now()}-${i}`,
+      id: wordId(w.word, w.meaning),
     }));
 
     return NextResponse.json({ words });

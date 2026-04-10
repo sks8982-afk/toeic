@@ -1,7 +1,17 @@
 // TOEIC 리스닝 문제 생성 API — Gemini로 생성
 import { NextResponse } from 'next/server';
+import { createHash } from 'crypto';
 import { z } from 'zod';
 import { generateContent } from '@/shared/lib/gemini';
+
+/** 문장/선택지 내용 기반의 안정 ID (중복 출제/오답 방지) */
+function contentId(prefix: string, ...parts: readonly string[]): string {
+  const hash = createHash('sha256')
+    .update(parts.map(p => (p ?? '').trim()).join('|'))
+    .digest('hex')
+    .slice(0, 12);
+  return `${prefix}-${hash}`;
+}
 
 const DIFFICULTY_GUIDE: Record<string, string> = {
   easy: 'Simple short sentence (1-2 sentences). Clear pronunciation, common words. Example: announcement, short message.',
@@ -64,10 +74,21 @@ Rules:
       return NextResponse.json({ error: 'Failed to generate question' }, { status: 500 });
     }
 
-    const question = JSON.parse(jsonMatch[0]);
+    const question = JSON.parse(jsonMatch[0]) as {
+      readonly audioText?: string;
+      readonly question?: string;
+      readonly options?: readonly string[];
+      readonly correctIndex?: number;
+      readonly transcript?: string;
+    };
 
     return NextResponse.json({
-      id: `listen-${difficulty}-${Date.now()}`,
+      id: contentId(
+        `listen-${difficulty}`,
+        question.audioText ?? '',
+        question.question ?? '',
+        (question.options ?? []).join('||'),
+      ),
       difficulty,
       ...question,
     });

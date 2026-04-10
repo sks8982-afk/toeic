@@ -46,11 +46,14 @@ export default function WrongNotesPage() {
         <h1 className="text-xl font-bold text-gray-900">오답 노트</h1>
       </div>
 
-      {/* 종류별 통계 */}
+      {/* 종류별 통계 — 오늘 복습 / 전체를 함께 표시해 혼란 방지 */}
       <div className="grid grid-cols-4 gap-2">
         <div className="text-center p-3 bg-red-50 rounded-xl">
-          <p className="text-xl font-bold text-red-600">{wrongAnswers.length}</p>
-          <p className="text-[10px] text-gray-500">전체</p>
+          <p className="text-xl font-bold text-red-600">
+            {dueReviews.length}
+            <span className="text-xs font-normal text-red-400">/{wrongAnswers.length}</span>
+          </p>
+          <p className="text-[10px] text-gray-500">오늘/전체</p>
         </div>
         <div className="text-center p-3 bg-blue-50 rounded-xl">
           <p className="text-xl font-bold text-blue-600">{toeicCount}</p>
@@ -92,10 +95,12 @@ export default function WrongNotesPage() {
       {filtered.length === 0 ? (
         <div className="text-center py-12 text-gray-400">
           <p className="text-4xl mb-3">
-            {filter === 'due' ? '🎉' : '📋'}
+            {filter === 'due' && wrongAnswers.length > 0 ? '🎉' : '📋'}
           </p>
           <p className="text-sm">
-            {filter === 'due' ? '오늘 복습할 문제가 없습니다!' : '오답이 없습니다'}
+            {filter === 'due' && wrongAnswers.length > 0
+              ? '오늘 복습할 문제가 없습니다!'
+              : '오답이 없습니다'}
           </p>
         </div>
       ) : (

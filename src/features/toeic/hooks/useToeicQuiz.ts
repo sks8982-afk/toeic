@@ -31,6 +31,11 @@ const INITIAL_STATE: QuizState = {
   sessionTotal: 0,
 };
 
+/** 문장 정규화: 공백/대소문자 차이로 "같은 문장"이 중복되지 않게 */
+function normalizeSentence(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 function getPresetQuestions(type: GrammarType | null, count: number, solvedIds: readonly string[]): ToeicQuestion[] {
   const solvedSet = new Set(solvedIds);
   const typed = presetQuestions as ToeicQuestion[];
@@ -40,6 +45,28 @@ function getPresetQuestions(type: GrammarType | null, count: number, solvedIds: 
 
   const shuffled = [...available].sort(() => Math.random() - 0.5).slice(0, count);
   return shuffled;
+}
+
+/**
+ * 이미 푼 문제 / 현재 세션에 있는 문제 중복 제거.
+ * ID가 달라도 문장이 같으면 같은 문제로 간주 (방어적).
+ */
+function dedupeQuestions(
+  incoming: readonly ToeicQuestion[],
+  solvedIds: readonly string[],
+  existing: readonly ToeicQuestion[],
+): ToeicQuestion[] {
+  const solvedSet = new Set(solvedIds);
+  const seenSentences = new Set(existing.map(q => normalizeSentence(q.sentence)));
+  const result: ToeicQuestion[] = [];
+  for (const q of incoming) {
+    if (solvedSet.has(q.id)) continue;
+    const key = normalizeSentence(q.sentence);
+    if (seenSentences.has(key)) continue;
+    seenSentences.add(key);
+    result.push(q);
+  }
+  return result;
 }
 
 export function useToeicQuiz() {
@@ -56,7 +83,7 @@ export function useToeicQuiz() {
     if (preset.length >= count) {
       setState(prev => ({
         ...prev,
-        questions: [...prev.questions, ...preset],
+        questions: [...prev.questions, ...dedupeQuestions(preset, solvedIds, prev.questions)],
         isLoading: false,
         error: null,
       }));
@@ -67,7 +94,7 @@ export function useToeicQuiz() {
     if (preset.length > 0) {
       setState(prev => ({
         ...prev,
-        questions: [...prev.questions, ...preset],
+        questions: [...prev.questions, ...dedupeQuestions(preset, solvedIds, prev.questions)],
       }));
     }
 
@@ -86,11 +113,12 @@ export function useToeicQuiz() {
         throw new Error(data.error ?? 'Failed to generate questions');
       }
 
-      const data = await res.json();
+      const data = await res.json() as { readonly questions: readonly ToeicQuestion[] };
 
+      // AI 생성 결과도 이미 푼 문제/현재 세션과 중복 제거
       setState(prev => ({
         ...prev,
-        questions: [...prev.questions, ...data.questions],
+        questions: [...prev.questions, ...dedupeQuestions(data.questions, solvedIds, prev.questions)],
         isLoading: false,
       }));
     } catch (error: unknown) {

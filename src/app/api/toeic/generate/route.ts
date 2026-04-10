@@ -1,10 +1,24 @@
 // Design Ref: §4.1 — POST /api/toeic/generate
 // Plan SC: SC-01 — TOEIC 문제 생성 정상 동작
 import { NextResponse } from 'next/server';
+import { createHash } from 'crypto';
 import { z } from 'zod';
 import { generateContent } from '@/shared/lib/gemini';
 import { buildGeneratePrompt } from '@/features/toeic/lib/generate-prompt';
 import type { ToeicQuestion, GrammarType } from '@/types';
+
+/**
+ * 문장 내용 기반의 안정적인 ID 생성.
+ * Date.now() 기반 ID는 같은 문장도 매번 다른 ID가 되어
+ * 중복 출제/중복 오답등록 버그를 유발함 → 콘텐츠 해시로 고정.
+ */
+function contentId(prefix: string, ...parts: readonly string[]): string {
+  const hash = createHash('sha256')
+    .update(parts.map(p => p.trim()).join('|'))
+    .digest('hex')
+    .slice(0, 12);
+  return `${prefix}-${hash}`;
+}
 
 const requestSchema = z.object({
   type: z.enum(['pos', 'tense', 'agreement', 'relative', 'preposition', 'conjunction', 'vocabulary']),
@@ -45,8 +59,8 @@ export async function POST(request: Request) {
       grammarPoint: string;
     }>;
 
-    const questions: ToeicQuestion[] = rawQuestions.map((q, i) => ({
-      id: `${type}-${difficulty}-${Date.now()}-${i}`,
+    const questions: ToeicQuestion[] = rawQuestions.map((q) => ({
+      id: contentId(`ai-${type}`, q.sentence, q.options.join('||'), String(q.correctIndex)),
       type: type as GrammarType,
       difficulty,
       sentence: q.sentence,
