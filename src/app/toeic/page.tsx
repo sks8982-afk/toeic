@@ -94,11 +94,11 @@ export default function ToeicPage() {
         />
       </div>
 
-      {/* 시작 버튼 */}
-      <div className="space-y-3">
+      {/* 시작 버튼 — 버튼마다 명확한 간격 + 테두리로 구분감 */}
+      <div className="flex flex-col gap-4">
         {/* 모의고사 */}
-        <Link href="/toeic/mock-exam">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-indigo-500 to-blue-600 p-4 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
+        <Link href="/toeic/mock-exam" className="block">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-indigo-700 bg-gradient-to-r from-indigo-500 to-blue-600 p-5 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
             <div className="flex items-center gap-3">
               <span className="text-3xl">📋</span>
               <div>
@@ -112,26 +112,46 @@ export default function ToeicPage() {
 
         <Link
           href={selectedType ? `/toeic/quiz?type=${selectedType}` : '/toeic/quiz'}
+          className="block"
         >
-          <Button fullWidth size="lg">
+          <Button
+            fullWidth
+            size="lg"
+            className="border-2 border-blue-700 shadow-md hover:shadow-lg"
+          >
             {selectedType ? `${selectedType} 문제 풀기` : '랜덤 문제 풀기'}
           </Button>
         </Link>
 
-        <Link href="/toeic/listening">
-          <Button fullWidth size="lg" variant="secondary">
+        <Link href="/toeic/listening" className="block">
+          <Button
+            fullWidth
+            size="lg"
+            variant="secondary"
+            className="border-2 border-gray-300 shadow-sm hover:shadow-md"
+          >
             🎧 리스닝 문제풀기
           </Button>
         </Link>
 
-        <Link href="/toeic/vocabulary">
-          <Button fullWidth size="lg" variant="secondary">
+        <Link href="/toeic/vocabulary" className="block">
+          <Button
+            fullWidth
+            size="lg"
+            variant="secondary"
+            className="border-2 border-gray-300 shadow-sm hover:shadow-md"
+          >
             📚 단어 학습
           </Button>
         </Link>
 
-        <Link href="/toeic/wrong-notes">
-          <Button fullWidth size="lg" variant="secondary">
+        <Link href="/toeic/wrong-notes" className="block">
+          <Button
+            fullWidth
+            size="lg"
+            variant="secondary"
+            className="border-2 border-gray-300 shadow-sm hover:shadow-md"
+          >
             📋 오답 노트 ({wrongAnswers.length}개)
           </Button>
         </Link>

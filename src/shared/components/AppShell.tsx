@@ -19,7 +19,7 @@ export function AppShell({ children }: { readonly children: ReactNode }) {
 
   return (
     <AuthGuard>
-      <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+      <main className="flex-1 pb-24">{children}</main>
       <BottomNav />
       <UpdateChecker />
     </AuthGuard>

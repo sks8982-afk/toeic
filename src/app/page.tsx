@@ -53,12 +53,12 @@ export default function Home() {
       </div>
 
       {/* 모드 선택 카드 */}
-      <div className="space-y-3">
+      <div className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">학습 모드</h2>
 
         {/* TOEIC 카드 */}
-        <Link href="/toeic">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-500 to-blue-700 p-5 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
+        <Link href="/toeic" className="block">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-blue-700 bg-gradient-to-r from-blue-500 to-blue-700 p-5 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-3xl shrink-0">
                 📝
@@ -88,8 +88,8 @@ export default function Home() {
         </Link>
 
         {/* Speak 카드 */}
-        <Link href="/speak">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-500 to-pink-600 p-5 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
+        <Link href="/speak" className="block">
+          <div className="relative overflow-hidden rounded-2xl border-2 border-purple-700 bg-gradient-to-r from-purple-500 to-pink-600 p-5 text-white shadow-lg hover:shadow-xl transition-shadow active:scale-[0.98]">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-3xl shrink-0">
                 🎙️
