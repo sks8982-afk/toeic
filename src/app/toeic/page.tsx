@@ -67,9 +67,9 @@ export default function ToeicPage() {
       </Card>
       </Link>
 
-      {/* 오답 복습 알림 */}
+      {/* 오답 복습 알림 — 통계 카드와 간격 추가 확보 */}
       {dueReviews.length > 0 && (
-        <Card variant="highlight" padding="md">
+        <Card variant="highlight" padding="md" className="mt-2">
           <div className="flex items-center justify-between">
             <div>
               <p className="font-semibold text-blue-900">오답 복습</p>
