@@ -1,208 +1,141 @@
-// Design Ref: §2.2.2 — 단어 학습 메인 (Leitner Box SRS)
-// Plan SC: SC-08 — 학습 기록 저장 및 복원
+// 단어 학습 — DB 추천 API 기반 순차 소비
+// 절대 규칙: 확인한 단어는 미확인 단어보다 우선순위가 높지 않음.
+// 세션 내에서도 같은 단어가 재등장하지 않도록 순차 소비 + 중복 가드.
 'use client';
 
-import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, Button, ProgressBar } from '@/shared/components/ui';
-import { Flashcard, QuizMode, BoxProgress, SessionHeader } from '@/features/vocabulary/components';
-import { useLeitnerBox } from '@/features/vocabulary/hooks/useLeitnerBox';
-import { useVocabSession } from '@/features/vocabulary/hooks/useVocabSession';
+import { Button, Card } from '@/shared/components/ui';
+import { Flashcard } from '@/features/vocabulary/components';
 import { useXP } from '@/features/gamification/hooks/useXP';
 import { useStreak } from '@/features/gamification/hooks/useStreak';
 import { useAuth } from '@/shared/providers/AuthProvider';
 import { logVocabStudy, updateDailySummary } from '@/shared/lib/activity-logger';
-import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
-import { supabase } from '@/shared/lib/supabase';
 import { XP_REWARDS } from '@/features/gamification/lib/xp-table';
 import { XPPopup } from '@/features/gamification/components';
 import type { VocabWord } from '@/types';
 
-import businessWords from '@/data/vocabulary/business.json';
-import financeWords from '@/data/vocabulary/finance.json';
-import hrWords from '@/data/vocabulary/hr.json';
-import marketingWords from '@/data/vocabulary/marketing.json';
-import dailyWords from '@/data/vocabulary/daily.json';
-import travelWords from '@/data/vocabulary/travel.json';
-
-const PRESET_WORDS: VocabWord[] = [
-  ...businessWords, ...financeWords, ...hrWords,
-  ...marketingWords, ...dailyWords, ...travelWords,
-] as VocabWord[];
+const SESSION_FETCH_COUNT = 20; // 한 번에 받아오는 단어 수
+const DAILY_TARGET = 30;        // 오늘 학습 목표
 
 export default function VocabularyPage() {
   const router = useRouter();
-  const [allWords, setAllWords] = useState<VocabWord[]>(PRESET_WORDS);
-  const [isLoading, setIsLoading] = useState(false);
-  const [usingDb, setUsingDb] = useState(false);
   const { user } = useAuth();
-  const leitner = useLeitnerBox();
   const { addXP, lastXPGain } = useXP();
   const { recordStudy } = useStreak();
-  const { addWrongAnswer } = useWrongAnswers();
-  const dailyTarget = 30;
 
-  const session = useVocabSession(leitner.allProgress, allWords, dailyTarget);
+  // 현재 세션에서 본 단어 목록 (중복 가드용) — id + 정규화된 단어
+  const seenIdsRef = useRef<Set<string>>(new Set());
+  const seenWordsRef = useRef<Set<string>>(new Set());
+  const sessionStats = useRef({ total: 0, correct: 0 });
 
-  const allWordSpellings = useMemo(
-    () => new Set(allWords.map(w => w.word.toLowerCase())),
-    [allWords],
-  );
+  const [queue, setQueue] = useState<VocabWord[]>([]); // 아직 안 본 대기 큐
+  const [current, setCurrent] = useState<VocabWord | null>(null);
+  const [learnedToday, setLearnedToday] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [completed, setCompleted] = useState(false);
 
-  // DB 추천 우선 — "확인한 단어는 미확인보다 절대 우선순위 높지 않음"
-  // /api/vocabulary/recommend 가 서버에서 이 규칙을 강제함
-  useEffect(() => {
+  const fetchMore = useCallback(async () => {
     if (!user || isLoading) return;
-    const learnedIds = new Set(leitner.allProgress.map(p => p.wordId));
-    const remaining = allWords.filter(w => !learnedIds.has(w.id));
-    if (remaining.length >= 10) return;
-
     setIsLoading(true);
-    fetch('/api/vocabulary/recommend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user.id, count: 30 }),
-    })
-      .then(res => res.json())
-      .then((data: { readonly words?: readonly VocabWord[]; readonly source?: string }) => {
-        if (data.words && data.words.length > 0) {
-          const newWords = data.words.filter(
-            w => !allWordSpellings.has(w.word.toLowerCase()),
-          );
-          if (newWords.length > 0) {
-            setAllWords(prev => [...prev, ...newWords]);
-            setUsingDb(true);
-            return;
-          }
-        }
-        // DB 추천이 비어 있거나 신규 없음 → AI 생성 폴백 (한시적)
-        return fetch('/api/vocabulary/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            count: 20,
-            excludeWords: Array.from(allWordSpellings).slice(0, 200),
-          }),
-        })
-          .then(res => res.json())
-          .then((fallback: { readonly words?: readonly VocabWord[] }) => {
-            if (fallback.words && fallback.words.length > 0) {
-              const newWords = fallback.words.filter(
-                w => !allWordSpellings.has(w.word.toLowerCase()),
-              );
-              if (newWords.length > 0) setAllWords(prev => [...prev, ...newWords]);
-            }
-          });
-      })
-      .catch(() => {
-        // 네트워크 실패 시 기존 프리셋만으로 진행
-      })
-      .finally(() => setIsLoading(false));
-  }, [leitner.allProgress.length, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // 세션 내 정답/오답 카운터
-  const sessionStats = useRef({ correct: 0, wrong: 0, total: 0 });
-
-  // 페이지 이탈 시 세션 요약 DB 저장
-  useEffect(() => {
-    return () => {
-      const s = sessionStats.current;
-      if (user && s.total > 0) {
-        supabase.from('vocab_study_log').insert({
-          user_id: user.id,
-          word_id: 'SESSION_SUMMARY',
-          word: `세션 요약: ${s.total}개 학습 (${s.correct}정답, ${s.wrong}오답)`,
-          action: 'session_end',
-          box_before: s.correct,
-          box_after: s.wrong,
-        });
-      }
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // DB에 사용자 학습 상태 기록 (미확인 우선순위 규칙 유지용)
-  const recordToDb = useCallback(
-    (wordId: string, action: 'know' | 'unsure' | 'unknown') => {
-      if (!user) return;
-      fetch('/api/vocabulary/record', {
+    setErrorMsg(null);
+    try {
+      const res = await fetch('/api/vocabulary/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.id, wordId, action }),
-      }).catch(() => {
-        /* 네트워크 실패는 조용히 무시 (localStorage 진행은 유지) */
+        body: JSON.stringify({ userId: user.id, count: SESSION_FETCH_COUNT }),
       });
+      const data = (await res.json()) as { readonly words?: readonly VocabWord[] };
+      const incoming = data.words ?? [];
+
+      // 세션 내 이미 본 것 제외 (ID / 단어 정규화 둘 다 체크)
+      const filtered: VocabWord[] = [];
+      for (const w of incoming) {
+        const key = (w.word ?? '').trim().toLowerCase();
+        if (!key) continue;
+        if (seenIdsRef.current.has(w.id)) continue;
+        if (seenWordsRef.current.has(key)) continue;
+        seenIdsRef.current.add(w.id);
+        seenWordsRef.current.add(key);
+        filtered.push(w);
+      }
+
+      setQueue(prev => [...prev, ...filtered]);
+    } catch (e: unknown) {
+      setErrorMsg(e instanceof Error ? e.message : '단어를 불러오지 못했습니다');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, isLoading]);
+
+  // 첫 로드: 큐 채우기 + 현재 단어 세팅
+  useEffect(() => {
+    if (!user) return;
+    if (current) return;
+    if (queue.length === 0) {
+      fetchMore();
+      return;
+    }
+    // 큐에서 첫 항목 꺼내기
+    const [first, ...rest] = queue;
+    setCurrent(first);
+    setQueue(rest);
+  }, [user, queue, current, fetchMore]);
+
+  // 학습 기록 (DB)
+  const recordKnown = useCallback(
+    async (wordId: string) => {
+      if (!user) return;
+      try {
+        await fetch('/api/vocabulary/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, wordId, action: 'know' }),
+        });
+      } catch {
+        /* 네트워크 실패는 조용히 무시 */
+      }
     },
     [user],
   );
 
-  // 플래시카드 "다음 단어" 처리 — 단어를 본 것만으로도 학습 완료로 간주.
-  // "알아요/애매해요/몰라요" 자가 평가는 제거됨. 단순히 단어/뜻/예문을 확인하고 넘김.
   const handleNext = useCallback(() => {
-    if (!session.currentWord) return;
+    if (!current) return;
 
-    leitner.initWord(session.currentWord.id);
-    const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
-
-    // DB 기록: "한 번 봤음" = know 로 취급 → 미확인 리스트에서 빠짐
-    recordToDb(session.currentWord.id, 'know');
-    leitner.promote(session.currentWord.id);
+    // DB 기록: 한 번 봤음 = know
+    recordKnown(current.id);
     addXP(XP_REWARDS.VOCAB_CORRECT);
-
-    const boxAfter = Math.min(boxBefore + 1, 5);
     sessionStats.current.total++;
     sessionStats.current.correct++;
 
     if (user) {
-      logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, 'know', boxBefore, boxAfter);
-      updateDailySummary(user.id, session.phase === 'review' ? 'vocab_reviewed' : 'vocab_learned');
+      logVocabStudy(user.id, current.id, current.word, 'know', 1, 2);
+      updateDailySummary(user.id, 'vocab_learned');
+    }
+    recordStudy();
+
+    const nextLearned = learnedToday + 1;
+    setLearnedToday(nextLearned);
+
+    // 일일 목표 달성 시 완료
+    if (nextLearned >= DAILY_TARGET) {
+      setCurrent(null);
+      setCompleted(true);
+      return;
     }
 
-    recordStudy();
-    session.nextWord();
-  }, [session, leitner, addXP, recordStudy, user, recordToDb]);
-
-  // 퀴즈 정답 처리
-  const handleQuizAnswer = useCallback(
-    (correct: boolean) => {
-      if (!session.currentWord) return;
-
-      leitner.initWord(session.currentWord.id);
-
-      const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
-
-      // DB 기록 (quiz 정답=know, 오답=unknown)
-      recordToDb(session.currentWord.id, correct ? 'know' : 'unknown');
-
-      if (correct) {
-        leitner.promote(session.currentWord.id);
-        addXP(XP_REWARDS.VOCAB_CORRECT);
-      } else {
-        leitner.demote(session.currentWord.id);
-        addWrongAnswer({
-          id: `vocab-quiz-${session.currentWord.id}`,
-          type: 'vocabulary' as const,
-          difficulty: session.currentWord.difficulty as 'easy' | 'medium' | 'hard',
-          sentence: `[단어 퀴즈] ${session.currentWord.word} — ${session.currentWord.meaning}`,
-          options: [session.currentWord.meaning, '다른 뜻1', '다른 뜻2', '다른 뜻3'],
-          correctIndex: 0,
-          explanation: `${session.currentWord.word} (${session.currentWord.partOfSpeech}): ${session.currentWord.meaning}\n예문: ${session.currentWord.exampleSentence}`,
-          grammarPoint: `단어 (${session.currentWord.category})`,
-        });
-      }
-
-      sessionStats.current.total++;
-      if (correct) sessionStats.current.correct++;
-      else sessionStats.current.wrong++;
-
-      if (user) {
-        logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, correct ? 'quiz_correct' : 'quiz_wrong', boxBefore, correct ? Math.min(boxBefore + 1, 5) : 1);
-      }
-
-      recordStudy();
-      session.nextWord();
-    },
-    [session, leitner, addXP, recordStudy, user, addWrongAnswer, recordToDb],
-  );
+    // 큐에서 다음 꺼내기
+    if (queue.length > 0) {
+      const [next, ...rest] = queue;
+      setCurrent(next);
+      setQueue(rest);
+    } else {
+      // 큐 비었으면 현재 카드 비우고 재fetch 유도
+      setCurrent(null);
+      fetchMore();
+    }
+  }, [current, queue, learnedToday, recordKnown, addXP, recordStudy, user, fetchMore]);
 
   return (
     <div className="space-y-5">
@@ -212,6 +145,7 @@ export default function VocabularyPage() {
           <button
             onClick={() => router.push('/toeic')}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600"
+            aria-label="뒤로"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -227,70 +161,81 @@ export default function VocabularyPage() {
         </button>
       </div>
 
-      {/* 세션 헤더 */}
-      <SessionHeader
-        phase={session.phase}
-        reviewCount={session.reviewCount}
-        newCount={session.newCount}
-        currentIndex={session.currentIndex}
-        totalInPhase={session.totalInPhase}
-      />
+      {/* 진행 요약 */}
+      <Card padding="md">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500">오늘 학습</p>
+            <p className="text-2xl font-bold text-blue-600">
+              {learnedToday}
+              <span className="text-sm font-normal text-gray-400"> / {DAILY_TARGET}</span>
+            </p>
+          </div>
+          <div className="w-40 h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all"
+              style={{ width: `${Math.min(100, (learnedToday / DAILY_TARGET) * 100)}%` }}
+            />
+          </div>
+        </div>
+      </Card>
 
       {/* 완료 화면 */}
-      {session.phase === 'complete' && (
-        <div className="text-center py-8 space-y-6">
+      {completed && (
+        <div className="text-center py-8 space-y-5">
           <div className="text-5xl">🎉</div>
           <h2 className="text-2xl font-bold text-gray-900">오늘 학습 완료!</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <Card padding="md">
-              <p className="text-2xl font-bold text-orange-600">{session.reviewedCount}</p>
-              <p className="text-xs text-gray-500">복습 완료</p>
-            </Card>
-            <Card padding="md">
-              <p className="text-2xl font-bold text-blue-600">{session.newLearnedCount}</p>
-              <p className="text-xs text-gray-500">신규 학습</p>
-            </Card>
-          </div>
-
-          {/* Box 진행도 */}
           <Card padding="md">
-            <h3 className="font-semibold text-gray-900 mb-3">학습 진행도</h3>
-            <BoxProgress
-              distribution={leitner.boxDistribution}
-              total={leitner.totalLearned}
-            />
+            <p className="text-3xl font-bold text-blue-600">{sessionStats.current.correct}</p>
+            <p className="text-xs text-gray-500 mt-1">이번 세션에서 본 단어</p>
           </Card>
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="secondary"
+              onClick={() => router.push('/toeic/vocabulary/test')}
+              size="lg"
+              fullWidth
+            >
+              테스트
+            </Button>
+            <Button onClick={() => router.push('/toeic')} size="lg" fullWidth>
+              돌아가기
+            </Button>
+          </div>
+        </div>
+      )}
 
-          <Button onClick={() => router.push('/toeic')} fullWidth size="lg">
+      {/* 로딩 */}
+      {!completed && !current && isLoading && (
+        <div className="text-center py-12 text-gray-400">
+          <p className="text-sm">단어를 불러오는 중...</p>
+        </div>
+      )}
+
+      {/* 에러 */}
+      {!completed && !current && !isLoading && errorMsg && (
+        <div className="text-center py-12 space-y-3">
+          <p className="text-4xl">😵</p>
+          <p className="text-sm text-red-600">{errorMsg}</p>
+          <Button onClick={fetchMore} variant="secondary">
+            다시 시도
+          </Button>
+        </div>
+      )}
+
+      {/* 단어가 더 없음 */}
+      {!completed && !current && !isLoading && !errorMsg && queue.length === 0 && (
+        <div className="text-center py-12 space-y-3">
+          <p className="text-4xl">📭</p>
+          <p className="text-sm text-gray-500">더 이상 학습할 단어가 없습니다</p>
+          <Button onClick={() => router.push('/toeic')} variant="secondary">
             돌아가기
           </Button>
         </div>
       )}
 
-      {/* 학습 중 */}
-      {session.phase !== 'complete' && session.currentWord && (
-        <>
-          {session.quizType === 'flashcard' ? (
-            <Flashcard word={session.currentWord} onNext={handleNext} />
-          ) : (
-            <QuizMode
-              word={session.currentWord}
-              allWords={allWords}
-              mode={session.quizType === 'fill-blank' ? 'fill-blank' : session.quizType === 'kr-to-en' ? 'kr-to-en' : 'en-to-kr'}
-              onAnswer={handleQuizAnswer}
-            />
-          )}
-        </>
-      )}
-
-      {/* 단어가 없을 때 */}
-      {session.phase !== 'complete' && !session.currentWord && (
-        <div className="text-center py-12 text-gray-400">
-          <p className="text-4xl mb-2">📚</p>
-          <p className="text-sm">학습할 단어가 없습니다</p>
-          <p className="text-xs mt-1">더 많은 단어를 추가해주세요</p>
-        </div>
-      )}
+      {/* 학습 카드 */}
+      {!completed && current && <Flashcard word={current} onNext={handleNext} />}
 
       {/* XP 팝업 */}
       <XPPopup amount={lastXPGain} show={lastXPGain > 0} />
