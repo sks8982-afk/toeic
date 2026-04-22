@@ -46,6 +46,8 @@ const VOCAB_FILES = [
   { file: 'daily.json', category: 'daily', defaultScore: 600 },
   { file: 'travel.json', category: 'travel', defaultScore: 600 },
   { file: 'advanced.json', category: null, defaultScore: 850 },
+  // AI 검증/보정을 거친 공개 데이터셋 기반 단어들 (정확성 우선)
+  { file: 'verified.json', category: 'general', defaultScore: 700 },
 ];
 
 function contentHashId(word, meaning) {

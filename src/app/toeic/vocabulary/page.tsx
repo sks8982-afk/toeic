@@ -135,57 +135,31 @@ export default function VocabularyPage() {
     [user],
   );
 
-  // 플래시카드 자가 평가 처리
-  const handleAssess = useCallback(
-    (result: 'know' | 'unsure' | 'unknown') => {
-      if (!session.currentWord) return;
+  // 플래시카드 "다음 단어" 처리 — 단어를 본 것만으로도 학습 완료로 간주.
+  // "알아요/애매해요/몰라요" 자가 평가는 제거됨. 단순히 단어/뜻/예문을 확인하고 넘김.
+  const handleNext = useCallback(() => {
+    if (!session.currentWord) return;
 
-      // Leitner Box에 등록 (신규 단어면 init)
-      leitner.initWord(session.currentWord.id);
+    leitner.initWord(session.currentWord.id);
+    const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
 
-      const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
+    // DB 기록: "한 번 봤음" = know 로 취급 → 미확인 리스트에서 빠짐
+    recordToDb(session.currentWord.id, 'know');
+    leitner.promote(session.currentWord.id);
+    addXP(XP_REWARDS.VOCAB_CORRECT);
 
-      // DB에 기록 — 추천 API가 중복 방지에 사용
-      recordToDb(session.currentWord.id, result);
+    const boxAfter = Math.min(boxBefore + 1, 5);
+    sessionStats.current.total++;
+    sessionStats.current.correct++;
 
-      if (result === 'know') {
-        leitner.promote(session.currentWord.id);
-        addXP(XP_REWARDS.VOCAB_CORRECT);
-      } else if (result === 'unknown') {
-        leitner.demote(session.currentWord.id);
-        // 오답노트에 추가
-        addWrongAnswer({
-          id: `vocab-${session.currentWord.id}`,
-          type: 'vocabulary' as const,
-          difficulty: session.currentWord.difficulty as 'easy' | 'medium' | 'hard',
-          sentence: `[단어] ${session.currentWord.word} — ${session.currentWord.meaning}`,
-          options: [session.currentWord.meaning, '다른 뜻1', '다른 뜻2', '다른 뜻3'],
-          correctIndex: 0,
-          explanation: `${session.currentWord.word} (${session.currentWord.partOfSpeech}): ${session.currentWord.meaning}\n예문: ${session.currentWord.exampleSentence}`,
-          grammarPoint: `단어 (${session.currentWord.category})`,
-        });
-      } else {
-        leitner.keep(session.currentWord.id);
-      }
+    if (user) {
+      logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, 'know', boxBefore, boxAfter);
+      updateDailySummary(user.id, session.phase === 'review' ? 'vocab_reviewed' : 'vocab_learned');
+    }
 
-      const boxAfter = result === 'know' ? Math.min(boxBefore + 1, 5) : result === 'unknown' ? 1 : boxBefore;
-
-      // 세션 카운터
-      sessionStats.current.total++;
-      if (result === 'know') sessionStats.current.correct++;
-      else if (result === 'unknown') sessionStats.current.wrong++;
-
-      // DB에 기록
-      if (user) {
-        logVocabStudy(user.id, session.currentWord.id, session.currentWord.word, result, boxBefore, boxAfter);
-        updateDailySummary(user.id, session.phase === 'review' ? 'vocab_reviewed' : 'vocab_learned');
-      }
-
-      recordStudy();
-      session.nextWord();
-    },
-    [session, leitner, addXP, recordStudy, user, addWrongAnswer, recordToDb],
-  );
+    recordStudy();
+    session.nextWord();
+  }, [session, leitner, addXP, recordStudy, user, recordToDb]);
 
   // 퀴즈 정답 처리
   const handleQuizAnswer = useCallback(
@@ -233,16 +207,24 @@ export default function VocabularyPage() {
   return (
     <div className="space-y-5">
       {/* 헤더 */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push('/toeic')}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold text-gray-900">단어 학습</h1>
+        </div>
         <button
-          onClick={() => router.push('/toeic')}
-          className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-600"
+          onClick={() => router.push('/toeic/vocabulary/test')}
+          className="px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-200 hover:bg-blue-100"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          📝 단어 테스트
         </button>
-        <h1 className="text-xl font-bold text-gray-900">단어 학습</h1>
       </div>
 
       {/* 세션 헤더 */}
@@ -289,7 +271,7 @@ export default function VocabularyPage() {
       {session.phase !== 'complete' && session.currentWord && (
         <>
           {session.quizType === 'flashcard' ? (
-            <Flashcard word={session.currentWord} onAssess={handleAssess} />
+            <Flashcard word={session.currentWord} onNext={handleNext} />
           ) : (
             <QuizMode
               word={session.currentWord}

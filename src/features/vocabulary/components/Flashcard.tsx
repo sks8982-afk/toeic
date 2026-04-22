@@ -1,76 +1,61 @@
-// Design Ref: §2.2.2 F-VOCAB-03 — 플래시카드 (단어 → 뜻 → 예문)
+// 단어 학습 카드 — 단어/뜻/예문만 표시하고 "다음 단어"로 넘김
 'use client';
 
-import { useState } from 'react';
 import type { VocabWord } from '@/types';
 
 interface FlashcardProps {
   readonly word: VocabWord;
-  readonly onAssess: (result: 'know' | 'unsure' | 'unknown') => void;
+  readonly onNext: () => void;
 }
 
-export function Flashcard({ word, onAssess }: FlashcardProps) {
-  const [flipped, setFlipped] = useState(false);
-
+export function Flashcard({ word, onNext }: FlashcardProps) {
   return (
-    <div className="w-full max-w-md mx-auto">
-      {/* 카드 */}
-      <button
-        onClick={() => setFlipped(!flipped)}
-        className="w-full min-h-[280px] p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-sm hover:shadow-md transition-all text-center"
-      >
-        {!flipped ? (
-          // 앞면: 영단어
-          <div className="flex flex-col items-center justify-center h-full gap-3">
-            <p className="text-3xl font-bold text-gray-900">{word.word}</p>
+    <div className="w-full max-w-md mx-auto space-y-4">
+      {/* 단어 카드 — 한 면에 단어/발음/품사/뜻/예문 모두 표시 */}
+      <div className="w-full min-h-[320px] p-6 bg-white rounded-2xl border-2 border-gray-200 shadow-sm text-center flex flex-col justify-center gap-4">
+        {/* 단어 + 발음 + 품사 */}
+        <div className="space-y-2">
+          <p className="text-3xl font-bold text-gray-900">{word.word}</p>
+          {word.pronunciation ? (
             <p className="text-sm text-gray-400">{word.pronunciation}</p>
-            <div className="flex flex-wrap gap-1 justify-center">
-              {word.partOfSpeech.split(/[,/]/).map((pos, i) => (
-                <span key={i} className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">
-                  {pos.trim()}
-                </span>
-              ))}
-            </div>
-            <p className="text-xs text-gray-400 mt-4">탭하여 뜻 보기</p>
+          ) : null}
+          <div className="flex flex-wrap gap-1 justify-center">
+            {word.partOfSpeech.split(/[,/]/).map((pos, i) => (
+              <span
+                key={i}
+                className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full"
+              >
+                {pos.trim()}
+              </span>
+            ))}
           </div>
-        ) : (
-          // 뒷면: 뜻 + 예문
-          <div className="flex flex-col items-center justify-center h-full gap-4">
-            <p className="text-2xl font-bold text-blue-600">{word.meaning}</p>
-            <div className="w-12 h-0.5 bg-gray-200" />
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {word.exampleSentence}
-            </p>
-            <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-full">
-              {word.category}
-            </span>
-          </div>
-        )}
-      </button>
-
-      {/* 자가 평가 버튼 (뒷면에서만) */}
-      {flipped && (
-        <div className="flex gap-3 mt-4">
-          <button
-            onClick={() => { setFlipped(false); onAssess('unknown'); }}
-            className="flex-1 py-3 rounded-xl bg-red-50 text-red-600 font-semibold text-sm hover:bg-red-100 transition-colors"
-          >
-            몰라요
-          </button>
-          <button
-            onClick={() => { setFlipped(false); onAssess('unsure'); }}
-            className="flex-1 py-3 rounded-xl bg-yellow-50 text-yellow-600 font-semibold text-sm hover:bg-yellow-100 transition-colors"
-          >
-            애매해요
-          </button>
-          <button
-            onClick={() => { setFlipped(false); onAssess('know'); }}
-            className="flex-1 py-3 rounded-xl bg-green-50 text-green-600 font-semibold text-sm hover:bg-green-100 transition-colors"
-          >
-            알아요
-          </button>
         </div>
-      )}
+
+        <div className="w-12 h-0.5 bg-gray-200 mx-auto" />
+
+        {/* 뜻 */}
+        <p className="text-2xl font-bold text-blue-600">{word.meaning}</p>
+
+        {/* 예문 */}
+        {word.exampleSentence ? (
+          <p className="text-sm text-gray-600 leading-relaxed italic">
+            {word.exampleSentence}
+          </p>
+        ) : null}
+
+        {/* 카테고리 */}
+        <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-full self-center">
+          {word.category}
+        </span>
+      </div>
+
+      {/* 다음 단어 버튼 */}
+      <button
+        onClick={onNext}
+        className="w-full py-4 rounded-xl bg-blue-600 text-white font-semibold text-base shadow-md hover:bg-blue-700 active:scale-[0.98] transition-all"
+      >
+        다음 단어 →
+      </button>
     </div>
   );
 }

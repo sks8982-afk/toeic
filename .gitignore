@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 .bkit/
 public/download/*.apk
+
+# vocab build artifacts
+/tmp-data/
+/src/data/vocabulary/bulk-top.json
+/.claude/settings.local.json
+/.playwright-mcp/
