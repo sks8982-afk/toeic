@@ -1,7 +1,6 @@
 // Design Ref: §2.2 — TOEIC 메인 화면 (유형 선택 + 오답 노트 + 통계)
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Card, Button } from '@/shared/components/ui';
@@ -10,11 +9,9 @@ import { useToeicStats } from '@/features/toeic/hooks/useToeicStats';
 import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import { XPBar } from '@/features/gamification/components';
 import { StreakBadge } from '@/features/gamification/components';
-import type { GrammarType } from '@/types';
 
 export default function ToeicPage() {
   const router = useRouter();
-  const [selectedType, setSelectedType] = useState<GrammarType | null>(null);
   const { totalSolved, estimatedScore, overallRate, accuracyByType } = useToeicStats();
   const { dueReviews, wrongAnswers } = useWrongAnswers();
 
@@ -84,14 +81,13 @@ export default function ToeicPage() {
         </Card>
       )}
 
-      {/* 유형 선택 */}
+      {/* 파트별(유형별) 바로 풀기 — 클릭하면 즉시 해당 유형 문제 시작 */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-3">문제 유형 선택</h2>
-        <TypeSelector
-          selected={selectedType}
-          onSelect={setSelectedType}
-          accuracyByType={accuracyByType}
-        />
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-lg font-bold text-gray-900">파트별 문제풀이</h2>
+          <span className="text-xs text-gray-500">Part 5 · 유형 선택</span>
+        </div>
+        <TypeSelector accuracyByType={accuracyByType} />
       </div>
 
       {/* 시작 버튼 — 버튼마다 명확한 간격 + 테두리로 구분감 */}
@@ -110,16 +106,13 @@ export default function ToeicPage() {
           </div>
         </Link>
 
-        <Link
-          href={selectedType ? `/toeic/quiz?type=${selectedType}` : '/toeic/quiz'}
-          className="block"
-        >
+        <Link href="/toeic/quiz" className="block">
           <Button
             fullWidth
             size="lg"
             className="border-2 border-blue-700 shadow-md hover:shadow-lg"
           >
-            {selectedType ? `${selectedType} 문제 풀기` : '랜덤 문제 풀기'}
+            랜덤 문제 풀기
           </Button>
         </Link>
 

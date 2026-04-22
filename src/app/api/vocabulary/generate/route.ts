@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const catLabel = category ?? 'mixed (business, daily, travel)';
     const excludeList = excludeWords.slice(0, 50).join(', ');
 
-    const prompt = `Generate ${count} TOEIC vocabulary words for Korean learners.
+    const prompt = `Generate ${count} HIGH-LEVEL TOEIC vocabulary for Korean learners aiming at 800~900 score.
 
 Category: ${catLabel}
 ${excludeList ? `EXCLUDE these words (already learned): ${excludeList}` : ''}
@@ -46,23 +46,32 @@ ${excludeList ? `EXCLUDE these words (already learned): ${excludeList}` : ''}
 Return ONLY a valid JSON array (no markdown):
 [
   {
-    "word": "negotiate",
-    "meaning": "협상하다",
-    "pronunciation": "/nɪˈɡoʊʃieɪt/",
-    "partOfSpeech": "verb",
-    "exampleSentence": "We need to negotiate the terms of the contract.",
+    "word": "adhere to",
+    "meaning": "(규칙을) 고수하다, 준수하다",
+    "pronunciation": "/ədˈhɪər tə/",
+    "partOfSpeech": "phrasal_verb",
+    "exampleSentence": "All employees must adhere to the company's confidentiality policy.",
     "category": "business",
-    "difficulty": "intermediate"
+    "difficulty": "advanced",
+    "targetScore": 850,
+    "isIdiom": true
   }
 ]
 
-Rules:
-- Each word must have: word, meaning (Korean, 1-3 words), pronunciation (IPA), partOfSpeech, exampleSentence (TOEIC-style), category, difficulty
-- partOfSpeech: if multiple (e.g. noun AND verb), use "noun, verb"
-- difficulty: basic (common), intermediate (frequent TOEIC), advanced (harder)
-- Mix difficulties: ~50% basic, ~35% intermediate, ~15% advanced
-- exampleSentence must be realistic business/workplace context
-- Do NOT repeat any word from the exclude list`;
+CRITICAL RULES:
+- Target level: TOEIC 800~900 (NOT basic). Words must genuinely appear in real TOEIC tests.
+- Include a HEALTHY MIX of:
+  * Single advanced words (e.g. expedite, scrutinize, reconcile, mitigate)
+  * Phrasal verbs (e.g. phase out, come up with, look into)
+  * Idioms / set phrases (e.g. "in lieu of", "on behalf of", "take into account")
+- At LEAST 30% of items must be idioms or phrasal verbs (set isIdiom: true)
+- partOfSpeech: use one of [noun, verb, adjective, adverb, phrasal_verb, idiom]
+- difficulty: MUST be "advanced" or "intermediate" (NO "basic")
+- targetScore: 750~950 (most around 800-900)
+- exampleSentence: realistic TOEIC Part 5~7 business context
+- meaning: concise Korean (1~4 words)
+- Do NOT repeat any word from the exclude list
+- Do NOT include obvious/basic words like meeting, office, report, email`;
 
     // DB에서 이미 존재하는 단어 목록 가져와서 exclude에 추가
     const { data: existingWords } = await supabaseAdmin
@@ -104,10 +113,55 @@ Rules:
       );
     }
 
-    const words = uniqueWords.map((w) => ({
-      ...w,
+    interface GeneratedWord {
+      readonly id: string;
+      readonly word: string;
+      readonly meaning: string;
+      readonly pronunciation?: string;
+      readonly partOfSpeech?: string;
+      readonly exampleSentence: string;
+      readonly category?: string;
+      readonly difficulty?: string;
+      readonly targetScore: number;
+      readonly isIdiom: boolean;
+    }
+
+    const words: GeneratedWord[] = uniqueWords.map((w): GeneratedWord => ({
       id: wordId(w.word, w.meaning),
+      word: w.word,
+      meaning: w.meaning,
+      pronunciation: w.pronunciation,
+      partOfSpeech: w.partOfSpeech,
+      exampleSentence: w.exampleSentence,
+      category: w.category,
+      difficulty: w.difficulty,
+      targetScore: Number(w.targetScore) || 800,
+      isIdiom:
+        String(w.isIdiom) === 'true' ||
+        ['idiom', 'phrasal_verb'].includes((w.partOfSpeech ?? '').toLowerCase()),
     }));
+
+    // v4 단어 마스터 테이블에도 누적 (추천 API가 이걸 사용)
+    if (words.length > 0) {
+      await supabaseAdmin
+        .from('toeic_vocabulary')
+        .upsert(
+          words.map(w => ({
+            id: w.id,
+            word: w.word,
+            meaning: w.meaning,
+            pronunciation: w.pronunciation ?? null,
+            part_of_speech: w.partOfSpeech ?? 'noun',
+            example_sentence: w.exampleSentence,
+            category: w.category || 'general',
+            difficulty: w.difficulty || 'advanced',
+            target_score: w.targetScore,
+            is_idiom: w.isIdiom,
+            source: 'ai',
+          })),
+          { onConflict: 'id', ignoreDuplicates: true },
+        );
+    }
 
     return NextResponse.json({ words });
   } catch (error: unknown) {

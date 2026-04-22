@@ -33,7 +33,8 @@ const PRESET_WORDS: VocabWord[] = [
 export default function VocabularyPage() {
   const router = useRouter();
   const [allWords, setAllWords] = useState<VocabWord[]>(PRESET_WORDS);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [usingDb, setUsingDb] = useState(false);
   const { user } = useAuth();
   const leitner = useLeitnerBox();
   const { addXP, lastXPGain } = useXP();
@@ -43,41 +44,61 @@ export default function VocabularyPage() {
 
   const session = useVocabSession(leitner.allProgress, allWords, dailyTarget);
 
-  // 전체 단어 스펠링 셋 (중복 방지용)
-  const allWordSpellings = useMemo(() =>
-    new Set(allWords.map(w => w.word.toLowerCase())),
+  const allWordSpellings = useMemo(
+    () => new Set(allWords.map(w => w.word.toLowerCase())),
     [allWords],
   );
 
-  // 프리셋 단어를 다 학습했으면 AI로 새 단어 생성
+  // DB 추천 우선 — "확인한 단어는 미확인보다 절대 우선순위 높지 않음"
+  // /api/vocabulary/recommend 가 서버에서 이 규칙을 강제함
   useEffect(() => {
-    if (isGenerating) return;
+    if (!user || isLoading) return;
     const learnedIds = new Set(leitner.allProgress.map(p => p.wordId));
     const remaining = allWords.filter(w => !learnedIds.has(w.id));
-    if (remaining.length < 10 && allWords.length > 0) {
-      setIsGenerating(true);
-      // 전체 단어 목록을 exclude (이미 본 것 + 프리셋 전체)
-      const allExclude = Array.from(allWordSpellings).slice(0, 200);
-      fetch('/api/vocabulary/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ count: 20, excludeWords: allExclude }),
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.words?.length > 0) {
-            // 스펠링 기준 중복 제거 후 추가
-            const newWords = data.words.filter(
-              (w: VocabWord) => !allWordSpellings.has(w.word.toLowerCase()),
-            );
-            if (newWords.length > 0) {
-              setAllWords(prev => [...prev, ...newWords]);
-            }
+    if (remaining.length >= 10) return;
+
+    setIsLoading(true);
+    fetch('/api/vocabulary/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user.id, count: 30 }),
+    })
+      .then(res => res.json())
+      .then((data: { readonly words?: readonly VocabWord[]; readonly source?: string }) => {
+        if (data.words && data.words.length > 0) {
+          const newWords = data.words.filter(
+            w => !allWordSpellings.has(w.word.toLowerCase()),
+          );
+          if (newWords.length > 0) {
+            setAllWords(prev => [...prev, ...newWords]);
+            setUsingDb(true);
+            return;
           }
+        }
+        // DB 추천이 비어 있거나 신규 없음 → AI 생성 폴백 (한시적)
+        return fetch('/api/vocabulary/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            count: 20,
+            excludeWords: Array.from(allWordSpellings).slice(0, 200),
+          }),
         })
-        .finally(() => setIsGenerating(false));
-    }
-  }, [leitner.allProgress.length]); // eslint-disable-line react-hooks/exhaustive-deps
+          .then(res => res.json())
+          .then((fallback: { readonly words?: readonly VocabWord[] }) => {
+            if (fallback.words && fallback.words.length > 0) {
+              const newWords = fallback.words.filter(
+                w => !allWordSpellings.has(w.word.toLowerCase()),
+              );
+              if (newWords.length > 0) setAllWords(prev => [...prev, ...newWords]);
+            }
+          });
+      })
+      .catch(() => {
+        // 네트워크 실패 시 기존 프리셋만으로 진행
+      })
+      .finally(() => setIsLoading(false));
+  }, [leitner.allProgress.length, user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 세션 내 정답/오답 카운터
   const sessionStats = useRef({ correct: 0, wrong: 0, total: 0 });
@@ -99,6 +120,21 @@ export default function VocabularyPage() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // DB에 사용자 학습 상태 기록 (미확인 우선순위 규칙 유지용)
+  const recordToDb = useCallback(
+    (wordId: string, action: 'know' | 'unsure' | 'unknown') => {
+      if (!user) return;
+      fetch('/api/vocabulary/record', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id, wordId, action }),
+      }).catch(() => {
+        /* 네트워크 실패는 조용히 무시 (localStorage 진행은 유지) */
+      });
+    },
+    [user],
+  );
+
   // 플래시카드 자가 평가 처리
   const handleAssess = useCallback(
     (result: 'know' | 'unsure' | 'unknown') => {
@@ -108,6 +144,9 @@ export default function VocabularyPage() {
       leitner.initWord(session.currentWord.id);
 
       const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
+
+      // DB에 기록 — 추천 API가 중복 방지에 사용
+      recordToDb(session.currentWord.id, result);
 
       if (result === 'know') {
         leitner.promote(session.currentWord.id);
@@ -145,7 +184,7 @@ export default function VocabularyPage() {
       recordStudy();
       session.nextWord();
     },
-    [session, leitner, addXP, recordStudy, user, addWrongAnswer],
+    [session, leitner, addXP, recordStudy, user, addWrongAnswer, recordToDb],
   );
 
   // 퀴즈 정답 처리
@@ -156,6 +195,9 @@ export default function VocabularyPage() {
       leitner.initWord(session.currentWord.id);
 
       const boxBefore = leitner.getProgress(session.currentWord.id)?.box ?? 1;
+
+      // DB 기록 (quiz 정답=know, 오답=unknown)
+      recordToDb(session.currentWord.id, correct ? 'know' : 'unknown');
 
       if (correct) {
         leitner.promote(session.currentWord.id);
@@ -185,7 +227,7 @@ export default function VocabularyPage() {
       recordStudy();
       session.nextWord();
     },
-    [session, leitner, addXP, recordStudy, user],
+    [session, leitner, addXP, recordStudy, user, addWrongAnswer, recordToDb],
   );
 
   return (
