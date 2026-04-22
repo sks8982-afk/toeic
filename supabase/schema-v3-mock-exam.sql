@@ -42,6 +42,12 @@ CREATE INDEX IF NOT EXISTS idx_mock_results_exam ON mock_exam_results(exam_id);
 -- RLS
 ALTER TABLE mock_exams ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mock_exam_results ENABLE ROW LEVEL SECURITY;
+
+-- 재실행 안전: 기존 정책 있으면 삭제 후 재생성
+DROP POLICY IF EXISTS "public_read_mock_exams" ON mock_exams;
+DROP POLICY IF EXISTS "anon_insert_mock_exams" ON mock_exams;
+DROP POLICY IF EXISTS "anon_all_mock_results" ON mock_exam_results;
+
 CREATE POLICY "public_read_mock_exams" ON mock_exams FOR SELECT USING (true);
 CREATE POLICY "anon_insert_mock_exams" ON mock_exams FOR INSERT WITH CHECK (true);
 CREATE POLICY "anon_all_mock_results" ON mock_exam_results FOR ALL USING (true) WITH CHECK (true);
