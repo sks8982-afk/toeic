@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/shared/providers/AuthProvider';
+import { useWrongAnswers } from '@/features/toeic/hooks/useWrongAnswers';
 import { Button, Card } from '@/shared/components/ui';
 import type { VocabWord } from '@/types';
 
@@ -15,6 +16,7 @@ const SET_SIZES = [10, 20, 30, 50] as const;
 export default function VocabularyTestPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const { addWrongAnswer } = useWrongAnswers();
 
   const [phase, setPhase] = useState<Phase>('select');
   const [size, setSize] = useState<number>(20);
@@ -75,8 +77,24 @@ export default function VocabularyTestPage() {
     (correct: boolean) => {
       const current = words[idx];
       if (!current) return;
-      if (correct) setCorrectCnt(c => c + 1);
-      else setWrongIds(ids => [...ids, current.id]);
+      if (correct) {
+        setCorrectCnt(c => c + 1);
+      } else {
+        setWrongIds(ids => [...ids, current.id]);
+        // 오답노트(단어)에 추가 — 기존 오답노트 UI에서 복습 가능하도록
+        addWrongAnswer({
+          id: `vocab-test-${current.id}`,
+          type: 'vocabulary' as const,
+          difficulty: (current.difficulty ?? 'medium') as 'easy' | 'medium' | 'hard',
+          sentence: `[단어] ${current.word} — ${current.meaning}`,
+          options: [current.meaning, '다른 뜻1', '다른 뜻2', '다른 뜻3'],
+          correctIndex: 0,
+          explanation: `${current.word} (${current.partOfSpeech}): ${current.meaning}${
+            current.exampleSentence ? `\n예문: ${current.exampleSentence}` : ''
+          }`,
+          grammarPoint: `단어 (${current.category ?? 'general'})`,
+        });
+      }
 
       record(current.id, correct ? 'know' : 'unknown');
 
@@ -88,7 +106,7 @@ export default function VocabularyTestPage() {
       setIdx(next);
       setRevealed(false);
     },
-    [idx, words, record],
+    [idx, words, record, addWrongAnswer],
   );
 
   // 키보드 지원 (스페이스=공개, 1=정답, 2=오답)
